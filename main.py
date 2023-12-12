@@ -4,6 +4,7 @@ import numpy
 
 from GUI.OrielWidget import OrielControlWidget
 from GUI.mainIPWindowUI import Ui_IpMain
+from GUI.saveWidget import saveW
 
 class mainAppW(QtWidgets.QMainWindow):
     def __init__(self):
@@ -11,6 +12,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui = Ui_IpMain()
         self.ui.setupUi(self)
         self.ow = OrielControlWidget()
+        self.saveW = saveW()
         self.__gui__()
         self.__signals__()
         pass
@@ -19,12 +21,20 @@ class mainAppW(QtWidgets.QMainWindow):
         l = self.ui.orielTab.layout()
         if l is None:
             l = QtWidgets.QVBoxLayout()
-            l.setContentsMargins(30,30,30,30)
+            l.setContentsMargins(0,0,0,0)
             # l.addWidget(self.ow, 0, 0, 1,1)
-            l.addWidget(self.ow, stretch=0, alignment=QtCore.Qt.AlignmentFlag.AlignJustify)
+            l.addWidget(self.ow, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
             self.ui.orielTab.setLayout(l)
         else:
             l.addWidget(self.ow)
+        l = self.ui.saveWidget.layout()
+        if l is None:
+            l = QtWidgets.QVBoxLayout()
+            l.setContentsMargins(0, 0, 0, 0)
+            # l.addWidget(self.ow, 0, 0, 1,1)
+            l.addWidget(self.saveW, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
+            self.ui.saveWidget.setLayout(l)
+        # self.ui.orielTab.setFixedWidth(self.ow.width())
         self.ow.ui.goBtn.setIcon(QtGui.QIcon("GUI/Icons/play.png"))
         # self.ow.ui.connectBtn.setIcon(QtGui.QIcon("GUI/Icons/connect.png"))
         self.ow.ui.sendCmdBtn.setIcon(QtGui.QIcon("GUI/Icons/play.png"))

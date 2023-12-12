@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>350</width>
-    <height>524</height>
+    <height>265</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,13 +26,20 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
+   <item row="2" column="1">
+    <widget class="QPushButton" name="sendCmdBtn">
+     <property name="text">
+      <string>Send</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0" colspan="2">
     <layout class="QGridLayout" name="gridLayout">
      <item row="2" column="0" colspan="3">
       <widget class="QPushButton" name="waveBtn">
        <property name="font">
         <font>
-         <pointsize>16</pointsize>
+         <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
@@ -44,7 +51,7 @@
       <widget class="QRadioButton" name="nmRadioBtn">
        <property name="font">
         <font>
-         <pointsize>16</pointsize>
+         <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
@@ -59,7 +66,7 @@
       <widget class="QDoubleSpinBox" name="entryBox">
        <property name="font">
         <font>
-         <pointsize>24</pointsize>
+         <pointsize>14</pointsize>
         </font>
        </property>
        <property name="maximum">
@@ -71,7 +78,7 @@
       <widget class="QRadioButton" name="evRadioBtn">
        <property name="font">
         <font>
-         <pointsize>16</pointsize>
+         <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
@@ -83,7 +90,7 @@
       <widget class="QPushButton" name="goBtn">
        <property name="font">
         <font>
-         <pointsize>16</pointsize>
+         <pointsize>14</pointsize>
         </font>
        </property>
        <property name="text">
@@ -105,7 +112,7 @@
       <widget class="QLabel" name="waveLabel">
        <property name="font">
         <font>
-         <pointsize>16</pointsize>
+         <pointsize>14</pointsize>
         </font>
        </property>
        <property name="text">
@@ -116,43 +123,19 @@
     </layout>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="font">
-      <font>
-       <pointsize>16</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Responses</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QPlainTextEdit" name="responsesField"/>
-   </item>
-   <item row="4" column="0">
     <widget class="QLineEdit" name="plainCmdBox">
      <property name="placeholderText">
       <string>Plain command</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
-    <widget class="QPushButton" name="sendCmdBtn">
-     <property name="text">
-      <string>Send</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0" colspan="2">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="2" column="0">
+     <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="font">
         <font>
-         <pointsize>16</pointsize>
+         <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
@@ -160,25 +143,25 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
-      <widget class="QPushButton" name="shutterCheckBtn">
-       <property name="text">
-        <string>Check?</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
+     <item row="1" column="0">
       <widget class="QPushButton" name="shutterToggleBtn">
        <property name="text">
         <string>Open/Close</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
+     <item row="1" column="1">
+      <widget class="QPushButton" name="shutterCheckBtn">
+       <property name="text">
+        <string>Check?</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
       <widget class="QLabel" name="shutterStatusLabel">
        <property name="font">
         <font>
-         <pointsize>16</pointsize>
+         <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">

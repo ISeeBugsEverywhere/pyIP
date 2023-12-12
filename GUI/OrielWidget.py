@@ -31,8 +31,8 @@ class OrielControlWidget(QtWidgets.QWidget):
     def sendCmd(self):
         cmd = self.ui.plainCmdBox.text()
         r = self.oriel.cmd(cmd)
-        self.ui.responsesField.appendPlainText("::CMD::\n{}".format(cmd))
-        self.ui.responsesField.appendPlainText(str(r))
+        # self.ui.responsesField.appendPlainText("::CMD::\n{}".format(cmd))
+        # self.ui.responsesField.appendPlainText(str(r))
         pass
     def go_fn(self):
         c_wave = float(self.oriel.wave())
@@ -50,7 +50,7 @@ class OrielControlWidget(QtWidgets.QWidget):
             self.ui.nmRadioBtn.setChecked(True)
             n_wave = val
         bts = self.oriel.gowave(val, unit)
-        self.ui.responsesField.appendPlainText(f"Bytes written: {bts}")
+        # self.ui.responsesField.appendPlainText(f"Bytes written: {bts}")
         #     delay?
         time.sleep(math.floor(abs(c_wave-n_wave))/10.0*0.125)
         cw = self.oriel.wave()
@@ -67,11 +67,13 @@ class OrielControlWidget(QtWidgets.QWidget):
     def check_fn(self):
         s = self.oriel.shutter()
         if s.lower() == 'c':
-            self.ui.responsesField.appendPlainText("Shutter is closed.")
+            # self.ui.responsesField.appendPlainText("Shutter is closed.")
+            return "Shutter is closed."
         elif s.lower() == 'o':
-            self.ui.responsesField.appendPlainText("Shutter is opened.")
+            return "Shutter is opened."
+            # self.ui.responsesField.appendPlainText("Shutter is opened.")
     def wave_fn(self):
         w = self.oriel.wave()
         self.ui.waveLabel.setText(WAVE_LABEL_TEXT.format(w))
-        self.ui.responsesField.appendPlainText(f"Current wave: {w}")
+        # self.ui.responsesField.appendPlainText(f"Current wave: {w}")
     pass
