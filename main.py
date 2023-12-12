@@ -6,7 +6,13 @@ from GUI.OrielWidget import OrielControlWidget
 from GUI.mainIPWindowUI import Ui_IpMain
 from GUI.saveWidget import saveW
 
+from Config.ipcfg import CFG
+from GUI.getFunctions import *
+
+
+
 class mainAppW(QtWidgets.QMainWindow):
+    cfg = CFG()
     def __init__(self):
         super().__init__()
         self.ui = Ui_IpMain()
@@ -46,6 +52,13 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.ucStatus.setScaledContents(True)
         self.ui.mainStatus.setPixmap(QtGui.QPixmap("GUI/Icons/security-high.png"))
         self.ui.mainStatus.setScaledContents(True)
+        self.ui.parametersEdit.setPlainText(self.cfg.ini)
+        p_ = get_serial_ports()
+        self.ui.arduinoSerialBox.addItems(p_)
+        self.ui.ucSerialBox.addItems(p_)
+        self.ui.connectBtn.setIcon(QtGui.QIcon('GUI/Icons/connect.png'))
+
+
     def __signals__(self):
         pass
 
