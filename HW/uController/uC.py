@@ -3,6 +3,8 @@ import os
 import sys
 import serial
 
+from HW.uController.crc import ComputeHash
+
 
 class uC():
     def __init__(self):
@@ -17,3 +19,5 @@ class uC():
             self.port.open()
         except Exception as ex:
             print("::EX:{}::".format(str(ex)))
+
+

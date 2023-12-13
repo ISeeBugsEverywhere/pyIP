@@ -218,7 +218,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_6">
        <item row="0" column="0">
-        <widget class="QTextBrowser" name="textBrowser"/>
+        <widget class="QTextBrowser" name="responsesField"/>
        </item>
       </layout>
      </widget>
@@ -268,7 +268,7 @@
               <enum>QLayout::SetMinimumSize</enum>
              </property>
              <item row="2" column="2">
-              <widget class="QPushButton" name="pushButton_4">
+              <widget class="QPushButton" name="minus50VBtn">
                <property name="text">
                 <string>-50V</string>
                </property>
@@ -282,7 +282,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QSpinBox" name="TmatBox">
+              <widget class="QSpinBox" name="TsBox">
                <property name="font">
                 <font>
                  <pointsize>14</pointsize>
@@ -293,7 +293,7 @@
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QSpinBox" name="spinBox_3">
+              <widget class="QSpinBox" name="uBox">
                <property name="font">
                 <font>
                  <pointsize>14</pointsize>
@@ -313,21 +313,21 @@
               </widget>
              </item>
              <item row="1" column="2">
-              <widget class="QPushButton" name="pushButton_5">
+              <widget class="QPushButton" name="setVoltageBtn">
                <property name="text">
                 <string>Nustatyti</string>
                </property>
               </widget>
              </item>
              <item row="2" column="0">
-              <widget class="QPushButton" name="pushButton_2">
+              <widget class="QPushButton" name="set2kVBtn">
                <property name="text">
                 <string>2kV!</string>
                </property>
               </widget>
              </item>
              <item row="0" column="3">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
+              <widget class="QDoubleSpinBox" name="cthBox">
                <property name="font">
                 <font>
                  <pointsize>14</pointsize>
@@ -352,7 +352,7 @@
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QPushButton" name="pushButton_3">
+              <widget class="QPushButton" name="plus50VBtn">
                <property name="text">
                 <string>+50V</string>
                </property>
@@ -422,7 +422,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
+              <widget class="QDoubleSpinBox" name="gasValueBox">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -432,7 +432,7 @@
               </widget>
              </item>
              <item row="3" column="1">
-              <widget class="QSpinBox" name="spinBox_5"/>
+              <widget class="QSpinBox" name="s1Box"/>
              </item>
              <item row="4" column="2">
               <widget class="QLCDNumber" name="lcdO2">
@@ -461,10 +461,10 @@
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QSpinBox" name="spinBox_4"/>
+              <widget class="QSpinBox" name="gasP1Box"/>
              </item>
              <item row="4" column="1">
-              <widget class="QSpinBox" name="spinBox_6"/>
+              <widget class="QSpinBox" name="delayS1Box"/>
              </item>
              <item row="4" column="0">
               <widget class="QLabel" name="label_14">
@@ -487,7 +487,7 @@
               </widget>
              </item>
              <item row="0" column="2">
-              <widget class="QPushButton" name="pushButton_7">
+              <widget class="QPushButton" name="renewArduinoBtn">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -500,7 +500,7 @@
               </widget>
              </item>
              <item row="3" column="2">
-              <widget class="QPushButton" name="pushButton_9">
+              <widget class="QPushButton" name="shutterGassBtn">
                <property name="text">
                 <string>Sklendė?</string>
                </property>
@@ -514,7 +514,7 @@
               </widget>
              </item>
              <item row="1" column="2">
-              <widget class="QPushButton" name="pushButton_8">
+              <widget class="QPushButton" name="startStopArduino">
                <property name="text">
                 <string>Start/Stop</string>
                </property>
@@ -548,7 +548,7 @@
               </widget>
              </item>
              <item row="4" column="2" colspan="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+              <widget class="QDoubleSpinBox" name="stepEVBox">
                <property name="font">
                 <font>
                  <pointsize>14</pointsize>
@@ -566,7 +566,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox">
+              <widget class="QDoubleSpinBox" name="startEVBox">
                <property name="font">
                 <font>
                  <pointsize>14</pointsize>
@@ -577,7 +577,7 @@
               </widget>
              </item>
              <item row="3" column="4" rowspan="3">
-              <widget class="QPushButton" name="pushButton_6">
+              <widget class="QPushButton" name="oneBtn">
                <property name="minimumSize">
                 <size>
                  <width>64</width>
@@ -590,7 +590,7 @@
               </widget>
              </item>
              <item row="0" column="4" rowspan="3">
-              <widget class="QPushButton" name="pushButton">
+              <widget class="QPushButton" name="doBtn">
                <property name="minimumSize">
                 <size>
                  <width>96</width>
@@ -617,10 +617,10 @@
               </widget>
              </item>
              <item row="5" column="0" colspan="4">
-              <widget class="QComboBox" name="comboBox"/>
+              <widget class="QComboBox" name="expStyleComboBox"/>
              </item>
              <item row="0" column="3">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+              <widget class="QDoubleSpinBox" name="stopEVBox">
                <property name="font">
                 <font>
                  <pointsize>14</pointsize>
@@ -631,7 +631,7 @@
               </widget>
              </item>
              <item row="1" column="2">
-              <widget class="QSpinBox" name="spinBox_2">
+              <widget class="QSpinBox" name="repeatBox">
                <property name="font">
                 <font>
                  <pointsize>14</pointsize>
@@ -642,7 +642,7 @@
               </widget>
              </item>
              <item row="2" column="2" rowspan="2">
-              <widget class="QSpinBox" name="spinBox">
+              <widget class="QSpinBox" name="darkCounterBox">
                <property name="font">
                 <font>
                  <pointsize>14</pointsize>
@@ -660,7 +660,7 @@
               </widget>
              </item>
              <item row="6" column="0" colspan="5">
-              <widget class="QProgressBar" name="progressBar">
+              <widget class="QProgressBar" name="expProgressBar">
                <property name="value">
                 <number>0</number>
                </property>
@@ -731,7 +731,7 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_10">
              <item row="0" column="0">
-              <widget class="QPlainTextEdit" name="plainTextEdit"/>
+              <widget class="QPlainTextEdit" name="experimentOutputEdit"/>
              </item>
             </layout>
            </widget>
@@ -821,6 +821,84 @@
            </item>
           </layout>
          </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Komandinis valdymas (Ard.,Vald.)</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_14">
+        <item row="0" column="0">
+         <widget class="QPushButton" name="sendToUCBtn">
+          <property name="text">
+           <string>UC:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="cmdUCEdit"/>
+        </item>
+        <item row="0" column="2">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>748</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="pushButton">
+          <property name="text">
+           <string>ARDUINO:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="ardCmdEdit"/>
+        </item>
+        <item row="1" column="2">
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>748</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="2" column="0" colspan="3">
+         <widget class="QGroupBox" name="groupBox_9">
+          <property name="title">
+           <string>Išvestis:</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_13">
+           <item row="0" column="0">
+            <widget class="QPlainTextEdit" name="cmdsResponses"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <spacer name="verticalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>308</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
