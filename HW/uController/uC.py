@@ -15,7 +15,7 @@ class uC():
         self.port = serial.Serial() #configure and open it later
         pass
 
-    def __enable_port(self, port:str, ports_params:dict):
+    def enable_port(self, port:str, ports_params:dict):
         self.port.port = port
         self.port.apply_settings(ports_params)
         try:
