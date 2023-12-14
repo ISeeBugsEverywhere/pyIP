@@ -39,3 +39,38 @@ class CFG():
         f = open(self.f, mode='w')
         self.parser.write(f, True)
         f.close()
+
+    def get_exp(self):
+        '''
+
+        :return: Ts,Cth,Tq,Tz,Vq
+        '''
+        Ts = self.parser['exp']['Ts']
+        Cth = self.parser['exp']['Cth']
+        Tq = self.parser['exp']['Tq']
+        Tz = self.parser['exp']['Tz']
+        Vq = self.parser['exp']['Vq']
+        return Ts,Cth,Tq,Tz,Vq
+
+    def set_exp(self, Ts, Cth):
+        self.parser.set('exp', 'Ts', Ts)
+        self.parser.set('exp', 'Cth', Cth)
+        self.save_cfg()
+    
+    def get_o2(self):
+        '''
+
+        :return: gas_value, p1, Topen, Tclose
+        '''
+        gas_value = self.parser['o2']['gas_value']
+        p1 = self.parser['o2']['p1']
+        Topen = self.parser['o2']['Topen']
+        Tclose = self.parser['o2']['Tclose']
+        return gas_value, p1, Topen, Tclose
+
+    def set_o2(self, gv, p1, To, Tc):
+        self.parser.set('o2', 'gas_value', gv)
+        self.parser.set('o2', 'p1', p1)
+        self.parser.set('o2', 'Topen', To)
+        self.parser.set('o2', 'Tclose', Tc)
+        self.save_cfg()

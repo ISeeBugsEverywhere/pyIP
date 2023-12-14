@@ -20,7 +20,7 @@ class ArduinoWatcher(QObject):
         self.port.open()
 
     def watch(self):
-        if self.port.is_open:
+        if self.port.is_open and not self.stop:
             while not self.stop:
                 size= self.port.in_waiting
                 if size:
@@ -29,9 +29,25 @@ class ArduinoWatcher(QObject):
                     self.progress.emit(r)
         else:
             self.progress.emit("::PORT IS CLOSED OR IN USE::")
+            # self.port.close()
 
     def end(self, arg):
         self.stop = arg
+
+    def write(self, cmd:str):
+        if self.port.is_open:
+            self.port.write(bytes(cmd))
+
+
+    def get(self):
+        r_ = 'NULL'
+        if self.port.is_open:
+            s = self.port.in_waiting
+            r = self.port.read(s)
+            r_ = r.decode('utf-8')
+        return  r_
+
+
 
 
 
