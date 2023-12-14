@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys, os
 import numpy
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QThread, QObject
 
 from GUI.OrielWidget import OrielControlWidget
 from GUI.mainIPWindowUI import Ui_IpMain
@@ -9,19 +10,22 @@ from GUI.saveWidget import saveW
 from Config.ipcfg import CFG
 from GUI.getFunctions import *
 
+from HW.Arduino.arduino import ArduinoWatcher
+
 
 
 class mainAppW(QtWidgets.QMainWindow):
     cfg = CFG()
     def __init__(self):
         super().__init__()
+        self.ArduinoWatch = None
         self.ui = Ui_IpMain()
         self.ui.setupUi(self)
         self.ow = OrielControlWidget()
         self.saveW = saveW()
         self.__gui__()
         self.__signals__()
-        pass
+        self.ArdQThread = QThread()
 
     def __gui__(self):
         l = self.ui.orielTab.layout()
@@ -60,7 +64,21 @@ class mainAppW(QtWidgets.QMainWindow):
 
 
     def __signals__(self):
+        self.ui.connectBtn.clicked.connect(self.connect_fn)
+
+    def connect_fn(self):
+        prms = get_port_param_dct('arduino', self.cfg)
+        ard_p = self.ui.arduinoSerialBox.currentText()
+        # arduino part:
+        self.ArduinoWatch = ArduinoWatcher(ard_p, prms)
+        self.ArduinoWatch.moveToThread(self.ArdQThread)
+        self.ArdQThread.started.connect(self.ArduinoWatch.watch)
+        self.ArduinoWatch.progress.connect(self.reportArduinoData)
+        self.ArdQThread.start()
         pass
+
+    def reportArduinoData(self, s:str):
+        self.ui.responsesField.append(s)
 
 if __name__ == "__main__":
     app =  QtWidgets.QApplication(sys.argv)

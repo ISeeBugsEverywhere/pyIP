@@ -27,7 +27,7 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>64</height>
          </size>
         </property>
@@ -47,7 +47,7 @@
        <widget class="QComboBox" name="arduinoSerialBox">
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>16777215</height>
          </size>
         </property>
@@ -64,7 +64,7 @@
        <widget class="QComboBox" name="ucSerialBox">
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>16777215</height>
          </size>
         </property>
@@ -80,7 +80,7 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>16777215</height>
          </size>
         </property>
@@ -978,7 +978,7 @@
      <x>0</x>
      <y>0</y>
      <width>1390</width>
-     <height>28</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFailas">
