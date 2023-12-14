@@ -32,6 +32,7 @@ class ArduinoWatcher(QObject):
             # self.port.close()
 
     def end(self, arg):
+        print('::STOP ARD::')
         self.stop = arg
 
     def write(self, cmd:str):

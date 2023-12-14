@@ -2,11 +2,13 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 import sys, os
 from GUI.orielWidgetUI import Ui_orielForm
 import time, math
+from PyQt5.QtCore import pyqtSlot, pyqtSignal
 
 
 WAVE_LABEL_TEXT = "Current wave [nm]: {}"
 
 class OrielControlWidget(QtWidgets.QWidget):
+    qtSignal = pyqtSignal(str)
     def __init__(self):
         super().__init__()
         self.ui = Ui_orielForm()
@@ -31,8 +33,7 @@ class OrielControlWidget(QtWidgets.QWidget):
     def sendCmd(self):
         cmd = self.ui.plainCmdBox.text()
         r = self.oriel.cmd(cmd)
-        # self.ui.responsesField.appendPlainText("::CMD::\n{}".format(cmd))
-        # self.ui.responsesField.appendPlainText(str(r))
+        self.qtSignal.emit("CMD:{}, RES: {}".format(cmd, r))
         pass
     def go_fn(self):
         c_wave = float(self.oriel.wave())
@@ -50,7 +51,7 @@ class OrielControlWidget(QtWidgets.QWidget):
             self.ui.nmRadioBtn.setChecked(True)
             n_wave = val
         bts = self.oriel.gowave(val, unit)
-        # self.ui.responsesField.appendPlainText(f"Bytes written: {bts}")
+        self.qtSignal.emit("Bytes written {}".format(bts))
         #     delay?
         time.sleep(math.floor(abs(c_wave-n_wave))/10.0*0.125)
         cw = self.oriel.wave()
@@ -67,13 +68,15 @@ class OrielControlWidget(QtWidgets.QWidget):
     def check_fn(self):
         s = self.oriel.shutter()
         if s.lower() == 'c':
-            # self.ui.responsesField.appendPlainText("Shutter is closed.")
-            return "Shutter is closed."
+            self.qtSignal.emit('SHUTTER CLOSED.')
+            self.ui.shutterStatusLabel.setText("CLOSED")
         elif s.lower() == 'o':
-            return "Shutter is opened."
-            # self.ui.responsesField.appendPlainText("Shutter is opened.")
+            self.qtSignal.emit('SHUTTER OPENED.')
+            self.ui.shutterStatusLabel.setText("OPENED")
+
+
     def wave_fn(self):
         w = self.oriel.wave()
         self.ui.waveLabel.setText(WAVE_LABEL_TEXT.format(w))
-        # self.ui.responsesField.appendPlainText(f"Current wave: {w}")
+
     pass

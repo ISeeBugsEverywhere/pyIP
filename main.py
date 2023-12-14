@@ -11,6 +11,7 @@ from Config.ipcfg import CFG
 from GUI.getFunctions import *
 
 from HW.Arduino.arduino import ArduinoWatcher
+from HW.OrielHWCS260.OrielCS260USB import Oriel
 
 
 
@@ -30,6 +31,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.__signals__()
         self.ArdQThread = QThread()
         self.ArduinoParser = ArdParser()
+        self.oriel = Oriel()
 
     def __gui__(self):
         l = self.ui.orielTab.layout()
@@ -92,8 +94,24 @@ class mainAppW(QtWidgets.QMainWindow):
 
 
     def __signals__(self):
-        self.ui.connectBtn.clicked.connect(self.connect_fn)
+        self.ui.connectBtn.clicked.connect(self.cnt_fn)
+        self.ow.qtSignal.connect(self.responseField)
 
+    def cnt_fn(self):
+        if self.ui.connectBtn.text() == 'Prisijungti':
+            self.connect_fn()
+            self.ui.connectBtn.setText('Atsijungti')
+        elif self.ui.connectBtn.text() == 'Atsijungti':
+            self.dis_fn()
+        pass
+
+    def dis_fn(self):
+        self.ArduinoWatch.end(True)
+        self.ArdQThread.quit()
+        self.ArdQThread.wait()
+        self.oriel.remove()
+        self.oriel = Oriel()
+        self.ui.connectBtn.setText('Prisijungti')
     def connect_fn(self):
         # arduino part:
         prms = get_port_param_dct('arduino', self.cfg)
@@ -108,6 +126,15 @@ class mainAppW(QtWidgets.QMainWindow):
         self.cfg.save_cfg()
         self.ui.arduinoStatus.setPixmap(QtGui.QPixmap('GUI/Icons/ARDUINO.png'))
         self.ui.arduinoStatus.setScaledContents(True)
+        # oriel
+        r = self.oriel.setup()
+        if r == 0:
+            self.ow.setOriel(self.oriel)
+            self.ui.orielStatus.setPixmap(QtGui.QPixmap('GUI/Icons/oriel_ok.png'))
+            self.ui.orielStatus.setScaledContents(True)
+        else:
+            self.ui.orielStatus.setPixmap(QtGui.QPixmap('GUI/Icons/oriel_no.png'))
+            self.ui.orielStatus.setScaledContents(True)
         pass
 
     def reportArduinoData(self, s:str):
@@ -119,6 +146,9 @@ class mainAppW(QtWidgets.QMainWindow):
             self.ui.lcdT.display(t)
         if code == 1:
             self.ui.lcdH.display(dht)
+
+    def responseField(self, s:str):
+        self.ui.responsesField.append(s)
 
 
 if __name__ == "__main__":

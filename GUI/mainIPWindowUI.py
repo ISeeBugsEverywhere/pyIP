@@ -15,6 +15,7 @@ class Ui_IpMain(object):
     def setupUi(self, IpMain):
         IpMain.setObjectName("IpMain")
         IpMain.resize(1390, 945)
+        IpMain.setLocale(QtCore.QLocale(QtCore.QLocale.C, QtCore.QLocale.AnyCountry))
         self.centralwidget = QtWidgets.QWidget(IpMain)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout_11 = QtWidgets.QGridLayout(self.centralwidget)
