@@ -12,6 +12,7 @@ from GUI.getFunctions import *
 
 from HW.Arduino.arduino import ArduinoWatcher
 from HW.OrielHWCS260.OrielCS260USB import Oriel
+from HW.uController.uC import uC
 
 
 
@@ -32,6 +33,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ArdQThread = QThread()
         self.ArduinoParser = ArdParser()
         self.oriel = Oriel()
+        self.uC = uC()
 
     def __gui__(self):
         l = self.ui.orielTab.layout()
@@ -135,6 +137,22 @@ class mainAppW(QtWidgets.QMainWindow):
         else:
             self.ui.orielStatus.setPixmap(QtGui.QPixmap('GUI/Icons/oriel_no.png'))
             self.ui.orielStatus.setScaledContents(True)
+        # Valdiklis:
+        up = get_port_param_dct('uc', self.cfg)
+        up_port = self.ui.ucSerialBox.currentText()
+        self.uC.enable_port(up_port, up)
+        r = self.uC.getIinValue(42)
+        if r is not None:
+            cr, crcr, crc_r, ErrCode, cmdNr, cmdRep, scaleStatus, status_msg = r
+            self.ui.responsesField.append(f"{status_msg}, {ErrCode}, {crcr}, μK, {crc_r}, m.crc")
+            self.cfg.set_uc('port', up_port)
+            self.cfg.save_cfg()
+            if cr:
+                self.ui.ucStatus.setPixmap(QtGui.QPixmap('GUI/Icons/micro.png'))
+                self.ui.ucStatus.setScaledContents(True)
+            else:
+                self.ui.ucStatus.setPixmap(QtGui.QPixmap('GUI/Icons/NOMICRO.png'))
+                self.ui.ucStatus.setScaledContents(True)
         pass
 
     def reportArduinoData(self, s:str):

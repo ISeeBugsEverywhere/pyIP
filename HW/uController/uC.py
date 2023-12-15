@@ -1,9 +1,12 @@
+import time
+
 import numpy
 import os
 import sys
 import serial
 
-from HW.uController.crc import ComputeHash
+from HW.uController.crc import ComputeHash, CompareHash
+from HW.uController.Functions import listIntegersToByteArray
 
 from PyQt5.QtCore import QObject, QThread, pyqtSignal, pyqtSlot
 
@@ -24,17 +27,31 @@ class uC():
             print("::EX:{}::".format(str(ex)))
     # commands:
 
-    def readIin(self, cmd_nr:int):
+    def getIinValue(self, cmd_nr = 1):
         esc = 0x1b
         r = 0x72
-        cmdNr = bytes(cmd_nr)
         kiek = 2
-        address = 0x82
-        cmd = [esc, r, cmdNr, kiek, address]
-        Crc32 = bytes(ComputeHash(cmd))
-        cmd32 = cmd + list(Crc32)
-        if self.port.is_open:
-            self.port.write(cmd32)
+        add = 0x82
+        cmd_ = listIntegersToByteArray([esc, r, cmd_nr, kiek, add])
+        crc = ComputeHash(cmd_)
+        cmd = cmd_+crc
+        cr, crcr, crc_r = None, None, None
+        scaleStatusd = {0:'50 nA', 1:'500 nA'}
+        try:
+            self.port.write(cmd)
+            time.sleep(1)
+            r_ = self.port.read(24)
+            cr, crcr, crc_r = CompareHash(r_)
+            ErrCode = r_[-5]
+            cmdNr = r_[-6]
+            cmdRep = r_[-7]
+            scaleStatus = int(r_[-8])
+            return cr, crcr, crc_r, ErrCode, cmdNr, cmdRep, scaleStatus, scaleStatusd[scaleStatus]
+        except Exception as ex:
+            print('::EX:{}::'.format(str(ex)))
+
+
+
 
 
 
