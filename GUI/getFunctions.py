@@ -1,27 +1,35 @@
 import serial
 import os, sys, time
-import glob
 from Config.ipcfg import CFG
 
+import glob
+import subprocess
 
+# out = subprocess.run(['udevadm', 'info', '-r', '-q', 'all', i], capture_output=True, text=True)
 def get_serial_ports():
+    result = {}
     if sys.platform.startswith('win'):
         ports = ['COM%s' % (i + 1) for i in range(256)]
+        result = dict.fromkeys(ports)
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
-        # this excludes your current terminal "/dev/tty"
-        ports = glob.glob('/dev/tty[A-Za-z]*')
-    elif sys.platform.startswith('darwin'):
-        ports = glob.glob('/dev/tty.*')
-    else:
-        raise EnvironmentError('Unsupported platform')
-    result = []
-    for port in ports:
-        try:
-            s = serial.Serial(port)
-            s.close()
-            result.append(port)
-        except (OSError, serial.SerialException):
-            pass
+        ttyUBSs = glob.glob('/dev/ttyUSB*')
+        ACTMs = glob.glob('/dev/ttyA*')
+        if len(ACTMs) > 0:
+            ttyUBSs.extend(ACTMs)
+        for i in ttyUBSs:
+            dev = {}
+            out = subprocess.run(['udevadm', 'info', '-r', '-q', 'all', i], capture_output=True, text=True)
+            r_ = out.stdout
+            c = out.returncode
+            l_ = r_.splitlines()
+            for i_ in l_:
+                if 'DEVNAME' in i_:
+                    d, n = i_.split("=")
+                    dev['devname'] = n
+                if 'ID_MODEL_FROM_DATABASE' in i_:
+                    m, n = i_.split('=')
+                    dev['idModel'] = n
+            result[dev['idModel']] = dev['devname']
     return result
 
 

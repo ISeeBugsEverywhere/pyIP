@@ -14,6 +14,9 @@ from HW.Arduino.arduino import ArduinoWatcher
 from HW.OrielHWCS260.OrielCS260USB import Oriel
 from HW.uController.uC import uC
 
+import subprocess
+import glob
+
 
 
 class mainAppW(QtWidgets.QMainWindow):
@@ -28,12 +31,14 @@ class mainAppW(QtWidgets.QMainWindow):
         self.Tq = 0
         self.Tz = 0
         self.Vq = 0
+        self.usbDevices = {}
         self.__gui__()
         self.__signals__()
         self.ArdQThread = QThread()
         self.ArduinoParser = ArdParser()
         self.oriel = Oriel()
         self.uC = uC()
+
 
     def __gui__(self):
         l = self.ui.orielTab.layout()
@@ -66,8 +71,9 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.mainStatus.setScaledContents(True)
         self.ui.parametersEdit.setPlainText(self.cfg.ini)
         p_ = get_serial_ports()
-        self.ui.arduinoSerialBox.addItems(p_)
-        self.ui.ucSerialBox.addItems(p_)
+        self.usbDevices = p_
+        self.ui.arduinoSerialBox.addItems(p_.keys())
+        self.ui.ucSerialBox.addItems(p_.keys())
         self.ui.connectBtn.setIcon(QtGui.QIcon('GUI/Icons/connect.png'))
         # parametrai:
         # exp:
@@ -118,7 +124,7 @@ class mainAppW(QtWidgets.QMainWindow):
         # arduino part:
         prms = get_port_param_dct('arduino', self.cfg)
         ard_p = self.ui.arduinoSerialBox.currentText()
-        self.ArduinoWatch = ArduinoWatcher(ard_p, prms)
+        self.ArduinoWatch = ArduinoWatcher(self.usbDevices[ard_p], prms)
         self.ArduinoWatch.moveToThread(self.ArdQThread)
         self.ArdQThread.started.connect(self.ArduinoWatch.watch)
         self.ArduinoWatch.progress.connect(self.reportArduinoData)
@@ -140,7 +146,7 @@ class mainAppW(QtWidgets.QMainWindow):
         # Valdiklis:
         up = get_port_param_dct('uc', self.cfg)
         up_port = self.ui.ucSerialBox.currentText()
-        self.uC.enable_port(up_port, up)
+        self.uC.enable_port(self.usbDevices[up_port], up)
         r = self.uC.getIinValue(42)
         if r is not None:
             cr, crcr, crc_r, ErrCode, cmdNr, cmdRep, scaleStatus, status_msg = r
