@@ -609,7 +609,35 @@
               </widget>
              </item>
              <item row="5" column="0" colspan="4">
-              <widget class="QComboBox" name="expStyleComboBox"/>
+              <widget class="QComboBox" name="expStyleComboBox">
+               <property name="minimumSize">
+                <size>
+                 <width>270</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>330</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <item>
+                <property name="text">
+                 <string>A (min=&gt;maks, p x N)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>B (min=&gt;maks, spektras x N)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>C (min=&gt;maks, prieš kiekvieną tašką matuojamas fonas)</string>
+                </property>
+               </item>
+              </widget>
              </item>
              <item row="0" column="3">
               <widget class="QDoubleSpinBox" name="stopEVBox">

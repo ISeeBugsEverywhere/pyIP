@@ -11,6 +11,10 @@ def get_serial_ports():
     if sys.platform.startswith('win'):
         ports = ['COM%s' % (i + 1) for i in range(256)]
         result = dict.fromkeys(ports)
+        k = 1
+        for i in result.keys():
+            result[i] = "COM{}".format(k)
+            k = k + 1
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
         ttyUBSs = glob.glob('/dev/ttyUSB*')
         ACTMs = glob.glob('/dev/ttyA*')
@@ -22,6 +26,8 @@ def get_serial_ports():
             r_ = out.stdout
             c = out.returncode
             l_ = r_.splitlines()
+            vid = ''
+            mid = ''
             for i_ in l_:
                 if 'DEVNAME' in i_:
                     d, n = i_.split("=")
@@ -29,7 +35,13 @@ def get_serial_ports():
                 if 'ID_MODEL_FROM_DATABASE' in i_:
                     m, n = i_.split('=')
                     dev['idModel'] = n
-            result[dev['idModel']] = dev['devname']
+                if "ID_MODEL_ID" in i_:
+                    m, n = i_.split('=')
+                    mid = n
+                if "ID_VENDOR_ID" in i_:
+                    m, n = i_.split('=')
+                    vid = n
+            result[dev['idModel']+ " ({}:{})".format(vid, mid)] = dev['devname']
     return result
 
 

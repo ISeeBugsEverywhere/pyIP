@@ -36,8 +36,11 @@ class mainAppW(QtWidgets.QMainWindow):
         self.__signals__()
         self.ArdQThread = QThread()
         self.ArduinoParser = ArdParser()
-        self.oriel = Oriel()
-        self.uC = uC()
+        V = self.cfg.parser['oriel']['VENDOR_ID']
+        P = self.cfg.parser['oriel']['PRODUCT_ID']
+        self.oriel = Oriel(int(V, 16), int(P, 16))
+        var = self.cfg.parser['uc']['model']
+        self.uC = uC(var)
 
 
     def __gui__(self):
@@ -104,6 +107,17 @@ class mainAppW(QtWidgets.QMainWindow):
     def __signals__(self):
         self.ui.connectBtn.clicked.connect(self.cnt_fn)
         self.ow.qtSignal.connect(self.responseField)
+        self.saveW.saveSignal.connect(self.save_data)
+
+    def save_data(self, fname:str):
+        data = self.ui.experimentOutputEdit.toPlainText()
+        p = self.cfg.parser['path']['path']
+        fp = os.path.join(p, fname)
+        f_ = open(fp, mode='w')
+
+        f_.write(data)
+        f_.close()
+
 
     def cnt_fn(self):
         if self.ui.connectBtn.text() == 'Prisijungti':

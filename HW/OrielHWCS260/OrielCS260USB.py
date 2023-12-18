@@ -4,8 +4,7 @@ import time
 
 
 
-VENDOR_ID = 0x1180  # ORIEL SHIT
-PRODUCT_ID = 0x0012
+
 
 # hardcoded, for CS260 USB only
 # CONSTS:
@@ -17,8 +16,12 @@ DELAY = 1  # seconds
 
 
 class Oriel():
-    def __init__(self):
+    # VENDOR_ID = 0x0
+    # PRODUCT_ID = 0x0
+    def __init__(self, Vendor, Product):
         self.device = None
+        self.VENDOR_ID = Vendor
+        self.PRODUCT_ID = Product
 
     def setup(self):
         """
@@ -28,7 +31,7 @@ class Oriel():
 
         """
         status = 1
-        self.device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+        self.device = usb.core.find(idVendor=self.VENDOR_ID, idProduct=self.PRODUCT_ID)
         if self.device is not None:
             usb.util.claim_interface(self.device, 0)
             status = 0
