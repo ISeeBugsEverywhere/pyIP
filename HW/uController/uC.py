@@ -1,3 +1,4 @@
+import struct
 import time
 
 import numpy
@@ -52,7 +53,7 @@ class uC():
             print('::EX:{}::'.format(str(ex)))
 
 
-    def setVoltage(self, kV, cmd_nr):
+    def setVoltage(self, kV, cmd_nr:int, kiekData):
         '''
         Rašymui/skaitymui (iki 0x0f):
 
@@ -73,9 +74,29 @@ Duomenys – įrašomi duomenys, jų kiekis turi būti Kiek.
         w = 0x77
         nr = cmd_nr
         add = 0x70
-        kiek = 2+1
+        kiek = kiekData
+        f42kV = None
+        if self.model == 'A':
+            volts2 = (kV * 1000.0 + 143.66) / 1.0158
+            volts = int(4095 * (4200.0 - volts2) / 2200.0)
+            f42kV = volts.to_bytes(2, 'little')
+        elif self.model == 'B':
+            volts2 = (kV * 1000.0 + 2.5435) / 1.012
+            volts = int(4095 * (4100.0 - volts2) / 2200.0)
+            f42kV = volts.to_bytes(2, 'little')
+        cmd = [esc.to_bytes(1,'little'), w.to_bytes(1, 'little'),
+               nr.to_bytes(1, 'little'), kiek.to_bytes(1,'little'),
+               add.to_bytes(1,'little'), f42kV[0].to_bytes(1, 'little'), f42kV[1].to_bytes(1,'little')]
+        cmd_ = b''.join(cmd)
+        cmd_crc = ComputeHash(cmd_)
+        cmd_b = b''.join(cmd)+cmd_crc
+        n = self.port.write(cmd_b)
+        # if n is not None and n > 0:
+        #     pass
+        time.sleep(1)
+        ret = self.port.read() #koks ilgis?
+    #
 
-        pass
 
     def countNi(self, Ts, Cth, Tz=0, Tq=0, Vq=0, nr=1):
         '''

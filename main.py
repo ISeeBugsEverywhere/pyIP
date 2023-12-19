@@ -108,6 +108,12 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.connectBtn.clicked.connect(self.cnt_fn)
         self.ow.qtSignal.connect(self.responseField)
         self.saveW.saveSignal.connect(self.save_data)
+        self.ui.setVoltageBtn.clicked.connect(self.set_voltage_fn)
+
+    def set_voltage_fn(self):
+        v =  self.ui.uBox.value()
+        n = self.uC.setVoltage(v/1000.0, 1, 2 )
+        print(n)
 
     def save_data(self, fname:str):
         data = self.ui.experimentOutputEdit.toPlainText()
