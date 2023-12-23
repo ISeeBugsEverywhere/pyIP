@@ -109,6 +109,32 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ow.qtSignal.connect(self.responseField)
         self.saveW.saveSignal.connect(self.save_data)
         self.ui.setVoltageBtn.clicked.connect(self.set_voltage_fn)
+        self.ui.plus50VBtn.clicked.connect(self.p50Vfn)
+        self.ui.minus50VBtn.clicked.connect(self.m50Vfn)
+        self.ui.set2kVBtn.clicked.connect(self.set2kVfn)
+        self.ui.actionU_daryti.triggered.connect(self.exit_fn)
+
+    def exit_fn(self):
+        sys.exit(0)
+
+    def p50Vfn(self):
+        v = self.ui.uBox.value()
+        v =  v + 50
+        self.ui.uBox.setValue(v)
+        self.set_voltage_fn()
+        pass
+
+    def m50Vfn(self):
+        v = self.ui.uBox.value()
+        v = v - 50
+        self.ui.uBox.setValue(v)
+        self.set_voltage_fn()
+        pass
+
+    def set2kVfn(self):
+        self.ui.uBox.setValue(2000)
+        self.set_voltage_fn()
+        pass
 
     def set_voltage_fn(self):
         v =  self.ui.uBox.value()
