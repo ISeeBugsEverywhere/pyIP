@@ -12,6 +12,7 @@ from HW.uController.Functions import listIntegersToByteArray
 from PyQt5.QtCore import QObject, QThread, pyqtSignal, pyqtSlot
 
 class uC():
+    crcErr = {0:"OK",1:"CRC32 blogas",2:"Bloga komanda",3:"Blogas parametras",4:"τ>0.1s (timeout)",5:"U per maža",6:"U per didelė"}
     progress = pyqtSignal(str)
     finished = pyqtSignal(str)
     def __init__(self, A):
@@ -44,7 +45,7 @@ class uC():
             time.sleep(1)
             r_ = self.port.read(24)
             cr, crcr, crc_r = CompareHash(r_)
-            ErrCode = r_[-5]
+            ErrCode = self.crcErr[r_[-5]]
             cmdNr = r_[-6]
             cmdRep = r_[-7]
             scaleStatus = int(r_[-8])
@@ -74,7 +75,7 @@ Duomenys – įrašomi duomenys, jų kiekis turi būti Kiek.
         w = 0x77
         nr = cmd_nr
         add = 0x70
-        kiek = kiekData
+        kiek = kiekData+1 #?? kodėl +1?
         f42kV = None
         if self.model == 'A':
             volts2 = (kV * 1000.0 + 143.66) / 1.0158
@@ -86,15 +87,22 @@ Duomenys – įrašomi duomenys, jų kiekis turi būti Kiek.
             f42kV = volts.to_bytes(2, 'little')
         cmd = [esc.to_bytes(1,'little'), w.to_bytes(1, 'little'),
                nr.to_bytes(1, 'little'), kiek.to_bytes(1,'little'),
-               add.to_bytes(1,'little'), f42kV[0].to_bytes(1, 'little'), f42kV[1].to_bytes(1,'little')]
-        cmd_ = b''.join(cmd)
+               add.to_bytes(1,'little'), f42kV[1].to_bytes(1, 'little'), f42kV[0].to_bytes(1,'little')]
+        cmd_ = b''.join(cmd)#+f42kV
         cmd_crc = ComputeHash(cmd_)
         cmd_b = b''.join(cmd)+cmd_crc
         n = self.port.write(cmd_b)
         # if n is not None and n > 0:
         #     pass
         time.sleep(1)
-        ret = self.port.read() #koks ilgis?
+        ret = self.port.read(22) #koks ilgis? 22 atseit?
+        crc_status, crcr, crc_r = CompareHash(ret)
+        ErrCode = self.crcErr[ret[-5]]
+        cmdNr = ret[-6]
+        cmdRep = ret[-7]
+        iin = ret[-8]
+        crc_v = ret[-10:-8]
+        return  crc_status, crcr, crc_r, ErrCode, cmdNr, cmdRep, crc_v, cmd_crc
     #
 
 

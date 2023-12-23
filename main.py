@@ -112,8 +112,8 @@ class mainAppW(QtWidgets.QMainWindow):
 
     def set_voltage_fn(self):
         v =  self.ui.uBox.value()
-        n = self.uC.setVoltage(v/1000.0, 1, 2 )
-        print(n)
+        crc_status, crcr, crc_r, ErrCode, cmdNr, cmdRep, crc_v, cmd_crc = self.uC.setVoltage(v/1000.0, 1, 2 )
+        print(crc_status, crcr, crc_r, ErrCode, cmdNr, cmdRep, crc_v, cmd_crc)
 
     def save_data(self, fname:str):
         data = self.ui.experimentOutputEdit.toPlainText()
