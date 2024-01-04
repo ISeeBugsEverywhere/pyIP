@@ -219,6 +219,7 @@ class mainAppW(QtWidgets.QMainWindow):
 
     def responseField(self, s:str):
         self.ui.responsesField.append(s)
+        pass
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainIPWindowUI.ui'
+# Form implementation generated from reading ui file '/home/egis/PycharmProjects/PyIP/GUI/UI/mainIPWindowUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
