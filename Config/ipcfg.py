@@ -13,18 +13,29 @@ class CFG():
 
 
     def __init__cfg(self):
+        '''
+        Init a CFG instance
+        '''
         self.parser.read(self.f)
 
     def get_ini(self):
+        '''
+        reads ini file
+        '''
         f = open(self.f, mode='r')
         self.ini = f.read()
         f.close()
 
     def get_arduino(self, key:str):
+        '''Arduino part
+        gets a value from key
+        '''
         return self.parser['arduino'][key]
         pass
 
     def set_arduino(self, key, value):
+        '''Arduino:
+        updates a value'''
         self.parser.set('arduino', key, value)
 
     def get_uc(self, key:str):
@@ -36,6 +47,7 @@ class CFG():
 
 
     def save_cfg(self):
+        '''Saves ini file'''
         f = open(self.f, mode='w')
         self.parser.write(f, True)
         f.close()
