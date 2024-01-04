@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys, os
-import numpy
+import numpy as np
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QThread, QObject
 
 from GUI.OrielWidget import OrielControlWidget
