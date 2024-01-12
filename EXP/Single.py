@@ -6,7 +6,7 @@ import time
 
 from HW.uController.uC import uC
 
-class SingleShot(QObject()):
+class SingleShot(QObject):
     finished = pyqtSignal(int, str, int, bool)
     progress = pyqtSignal(float)
     def __init__(self, uc:uC):
