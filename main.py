@@ -7,7 +7,7 @@ from GUI.OrielWidget import OrielControlWidget
 from GUI.mainIPWindowUI import Ui_IpMain
 from GUI.saveWidget import saveW
 
-from Config.ipcfg import CFG
+from Config.ipcfg import CFG, F
 from GUI.getFunctions import *
 
 from HW.Arduino.arduino import ArduinoWatcher
@@ -41,6 +41,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.oriel = Oriel(int(V, 16), int(P, 16))
         var = self.cfg.parser['uc']['model']
         self.uC = uC(var)
+        self.debug = False
 
 
     def __gui__(self):
@@ -116,6 +117,48 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.renewArduinoBtn.clicked.connect(self.renewArduinoParams)
         self.ui.startStopArduino.clicked.connect(self.startStopArduino)
         self.ui.shutterGassBtn.clicked.connect(self.shutterGasFn)
+        self.ui.saveParamsBtn.clicked.connect(self.saveParamsFn)
+        self.ui.reloadParamsBtn.clicked.connect(self.reloadParamsFn)
+        self.ui.actionDebug.triggered.connect(self.dbgfn)
+        # valdiklis:
+        self.ui.oneBtn.clicked.connect(self.oneMeasurement)
+    
+    def oneMeasurement(self):
+        Ts = self.ui.TsBox.value()
+        Cth = int(self.ui.cthBox.value())        
+        self.uC.countNi(Ts,Cth, self.Tz, self.Tq, self.Vq, 1)
+    
+    def dbgfn(self):
+        if self.ui.actionDebug.isChecked():
+            self.ui.responsesField.append("::DEBUG ENABLED::")
+            self.debug = True
+        else:
+            self.ui.responsesField.append("::DEBUG DISABLED::")
+            self.debug = False
+    
+    def check(self, *msg):
+        if self.debug:
+            if type(msg) is str:
+                self.ui.responsesField.append(msg)
+            elif type(msg) is list or type(msg) is tuple:
+                n = []
+                for i in msg:
+                    n.append(str(i))
+                m = ' '.join(n)
+                self.ui.responsesField.append(m)
+    
+    def reloadParamsFn(self):
+        # self.cfg = None
+        # time.sleep(1)
+        self.cfg = CFG()
+        pass
+    
+    def saveParamsFn(self):
+        params = self.ui.parametersEdit.toPlainText()
+        f = open(F, mode='w')
+        f.write(params)
+        f.close()
+        pass
     
     def renewArduinoParams(self):
         '''Updates arduino with new parameters'''
@@ -169,14 +212,13 @@ class mainAppW(QtWidgets.QMainWindow):
     def set_voltage_fn(self):
         v =  self.ui.uBox.value()
         crc_status, crcr, crc_r, ErrCode, cmdNr, cmdRep, crc_v, cmd_crc = self.uC.setVoltage(v/1000.0, 1, 2 )
-        print(crc_status, crcr, crc_r, ErrCode, cmdNr, cmdRep, crc_v, cmd_crc)
+        self.check(crc_status, crcr, crc_r, ErrCode, cmdNr, cmdRep, crc_v, cmd_crc)
 
     def save_data(self, fname:str):
         data = self.ui.experimentOutputEdit.toPlainText()
         p = self.cfg.parser['path']['path']
         fp = os.path.join(p, fname)
         f_ = open(fp, mode='w')
-
         f_.write(data)
         f_.close()
 
@@ -252,7 +294,7 @@ class mainAppW(QtWidgets.QMainWindow):
             self.ui.lcdH.display(dht)
         else:
             # self.ui.responsesField.append("::OUTPUT::\n"+str(s))
-            # print("::OUT\n",o2, t, o22, ch4, status_msg, code, dht, rem)
+            # self.check("::OUT\n",o2, t, o22, ch4, status_msg, code, dht, rem)
             # print(fs)
             pass
 

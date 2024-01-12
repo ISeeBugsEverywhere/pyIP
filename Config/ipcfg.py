@@ -59,9 +59,9 @@ class CFG():
         '''
         Ts = self.parser['exp']['Ts']
         Cth = self.parser['exp']['Cth']
-        Tq = self.parser['exp']['Tq']
-        Tz = self.parser['exp']['Tz']
-        Vq = self.parser['exp']['Vq']
+        Tq = int(self.parser['exp']['Tq'])
+        Tz = int(self.parser['exp']['Tz'])
+        Vq = int(self.parser['exp']['Vq'])
         return Ts,Cth,Tq,Tz,Vq
 
     def set_exp(self, Ts, Cth):

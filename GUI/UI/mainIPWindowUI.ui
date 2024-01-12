@@ -1064,12 +1064,27 @@
     </property>
     <addaction name="actionU_daryti"/>
    </widget>
+   <widget class="QMenu" name="menuDerinimas">
+    <property name="title">
+     <string>Derinimas</string>
+    </property>
+    <addaction name="actionDebug"/>
+   </widget>
    <addaction name="menuFailas"/>
+   <addaction name="menuDerinimas"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionU_daryti">
    <property name="text">
     <string>Uždaryti</string>
+   </property>
+  </action>
+  <action name="actionDebug">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Įjungti derinimą</string>
    </property>
   </action>
  </widget>

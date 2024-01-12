@@ -106,7 +106,7 @@ Duomenys – įrašomi duomenys, jų kiekis turi būti Kiek.
     #
 
 
-    def countNi(self, Ts, Cth, Tz=0, Tq=0, Vq=0, nr=1):
+    def countNi(self, Ts:int, Cth:int, Tz=0, Tq=0, Vq=0, cmdnr=1):
         '''
         Prašymas pradėti skaičiavimą.
 Esc  s nr Ts Tz Tq Cth Vq  CRC32
@@ -122,6 +122,22 @@ Specifiniai_duomenys:
 Ni: einama impulsų skaitiklio vertė. (4 baitai)
         :return:
         '''
+        esc = 0x1b.to_bytes(1,'little')
+        s = 0x73.to_bytes(1,'little')
+        nr = cmdnr.to_bytes(1, 'little')
+        Tsb = (Ts*10).to_bytes(1, 'little')
+        Tzb = (Tz*100).to_bytes(1,'little')
+        Tqb = (Tq*100).to_bytes(2, 'little') #!
+        Vqb = int(Vq/0.392).to_bytes(1, 'little')
+        Cthb = int(Cth).to_bytes(1, 'little')
+        cmd_ = [esc, s, nr, Tsb, Tzb,Tqb[1].to_bytes(1,'little'), Tqb[0].to_bytes(1,'little'), Cthb, Vqb]
+        cmd = b''.join(cmd_)
+        crc = ComputeHash(cmd)
+        cmdb = cmd+crc
+        n = self.port.write(cmdb)        
+        pass
+    
+    def lastBytes(self, data):
         pass
 
 
