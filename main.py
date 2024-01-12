@@ -17,6 +17,9 @@ from HW.uController.uC import uC
 import subprocess
 import glob
 
+from EXP.Single import SingleShot #1nam matavimui
+
+
 
 
 class mainAppW(QtWidgets.QMainWindow):
@@ -36,6 +39,8 @@ class mainAppW(QtWidgets.QMainWindow):
         self.__signals__()
         self.ArdQThread = QThread()
         self.ArduinoParser = ArdParser()
+        self.ExpThread = QThread()
+        self.ExpObject = None
         V = self.cfg.parser['oriel']['VENDOR_ID']
         P = self.cfg.parser['oriel']['PRODUCT_ID']
         self.oriel = Oriel(int(V, 16), int(P, 16))
@@ -127,8 +132,24 @@ class mainAppW(QtWidgets.QMainWindow):
     
     def oneMeasurement(self):
         Ts = self.ui.TsBox.value()
-        Cth = int(self.ui.cthBox.value())        
-        self.uC.countNi(Ts,Cth, self.Tz, self.Tq, self.Vq, 1)
+        Cth = int(self.ui.cthBox.value())
+        self.ExpObject = SingleShot(self.uC)
+        self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1)
+        self.ExpObject.moveToThread(self.ExpThread)
+        self.ExpThread.started.connect(self.ExpObject.count)
+        self.ExpObject.progress.connect(self.expProgressBarFn)
+        self.ExpObject.finished.connect(self.expSingleFinished)
+        self.ExpThread.run()
+    
+    def expProgressBarFn(self, p:float):
+        self.ui.expProgressBar.setValue(int(p*100))
+        pass
+    
+    def expSingleFinished(self, Ni, ErrCode, code, statusas):
+        self.check(Ni, ErrCode, code, statusas)
+        pass
+        
+        # self.uC.countNi(Ts,Cth, self.Tz, self.Tq, self.Vq, 1)
     
     def dbgfn(self):
         if self.ui.actionDebug.isChecked():
