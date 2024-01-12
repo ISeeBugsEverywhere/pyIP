@@ -113,6 +113,36 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.minus50VBtn.clicked.connect(self.m50Vfn)
         self.ui.set2kVBtn.clicked.connect(self.set2kVfn)
         self.ui.actionU_daryti.triggered.connect(self.exit_fn)
+        self.ui.renewArduinoBtn.clicked.connect(self.renewArduinoParams)
+        self.ui.startStopArduino.clicked.connect(self.startStopArduino)
+        self.ui.shutterGassBtn.clicked.connect(self.shutterGasFn)
+    
+    def renewArduinoParams(self):
+        '''Updates arduino with new parameters'''
+        cmd_o2 = 'o2'
+        o2_lvl = int(self.ui.gasValueBox.value()*100) #D4
+        threshold = self.ui.gasP1Box.value() #D2
+        open_ = self.ui.s1Box.value() #D2
+        delay_ = self.ui.delayS1Box.value() #D2
+        cmd_o = f"{cmd_o2}{o2_lvl:04.0f}{threshold:02.0f}t{open_:02.0f}{delay_:02.0f}!"
+        self.ArduinoWatch.write(cmd=cmd_o)
+        # print(cmd_o)
+        pass
+    
+    def startStopArduino(self):
+        '''Stops/Starts Arduino'''
+        if self.ui.startStopArduino.text() == 'Start':
+            self.ArduinoWatch.started()
+            self.ui.startStopArduino.setText('Stop')
+        elif self.ui.startStopArduino.text() == 'Stop':
+            self.ArduinoWatch.stoped()
+            self.ui.startStopArduino.setText('Start')
+        pass
+    
+    def shutterGasFn(self):
+        '''Checks gas shutter state via Arduino'''
+        self.ArduinoWatch.write('t')
+        pass
 
     def exit_fn(self):
         sys.exit(0)
@@ -208,14 +238,23 @@ class mainAppW(QtWidgets.QMainWindow):
         pass
 
     def reportArduinoData(self, s:str):
-        o2, t, o22, ch4, status_msg, code, dht, rem = self.ArduinoParser.analyzeArd(s)
+        o2, t, o22, ch4, status_msg, code, dht, rem, fs = self.ArduinoParser.analyzeArd(s)
         if code == 2:
             self.ui.responsesField.append(rem)
-        if code == 0:
+            if 'closed' in rem.lower():
+                self.ui.shutterSttausLabel.setText('UŽD.')
+            if 'opened' in rem.lower():
+                self.ui.shutterSttausLabel.setText('ATID.')
+        elif code == 0:
             self.ui.lcdO2.display(o2)
             self.ui.lcdT.display(t)
-        if code == 1:
+        elif code == 1:
             self.ui.lcdH.display(dht)
+        else:
+            # self.ui.responsesField.append("::OUTPUT::\n"+str(s))
+            # print("::OUT\n",o2, t, o22, ch4, status_msg, code, dht, rem)
+            # print(fs)
+            pass
 
     def responseField(self, s:str):
         self.ui.responsesField.append(s)

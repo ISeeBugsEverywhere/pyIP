@@ -24,20 +24,27 @@ class ArduinoWatcher(QObject):
             while not self.stop:
                 size= self.port.in_waiting
                 if size:
-                    data = self.port.read(size)
-                    r = data.decode('utf-8')
-                    self.progress.emit(r)
+                    try:
+                        data = self.port.read(size)
+                        r = data.decode('utf-8')
+                        self.progress.emit(r)
+                    except Exception as ex:
+                        data = self.port.read(size)
+                        self.progress.emit('REM:'+str(data)+'::'+str(ex)+":REM:!")
+                        
         else:
-            self.progress.emit("::PORT IS CLOSED OR IN USE::")
+            self.progress.emit("REM:PORT IS CLOSED OR IN USE:REM:!")
             # self.port.close()
 
     def end(self, arg):
-        print('::STOP ARD::')
+        # print('::STOP ARD::')
         self.stop = arg
 
     def write(self, cmd:str):
+        n = -1
         if self.port.is_open:
-            self.port.write(bytes(cmd))
+            n = self.port.write(bytes(cmd, encoding='utf-8'))
+        return n
 
 
     def get(self):
@@ -47,7 +54,14 @@ class ArduinoWatcher(QObject):
             r = self.port.read(s)
             r_ = r.decode('utf-8')
         return  r_
-
+    
+    def stoped(self):
+        n = self.port.write(bytes('s', encoding='utf-8'))
+        # self.progress.emit(f'REM:ARDUINO STOPPED; {n}:REM:!')
+    
+    def started(self):
+        n = self.port.write(bytes('b', encoding='utf-8'))
+        # self.progress.emit(f'REM:ARDUINO STARTED; {n}:REM:!')
 
 
 

@@ -78,6 +78,7 @@ class ArdParser():
 
     def fillArdStr(self, s:str):
         self.ARDSTR = self.ARDSTR + s.replace("\n", '').replace('\r','')
+        # print(self.ARDSTR, "<==::ARDSTR::")
 
     def analyzeArd(self, s:str):
         '''
@@ -85,7 +86,7 @@ class ArdParser():
         GAS:xxx;tt.tt;O2:zz.zz:O2:!;O22:xx.yy:O22:!
         :return o2, t, o22, ch4, status_msg, code, dht, rem
         '''
-        self.fillArdStr(s)
+        self.fillArdStr(s.lower())
         o22 = -1
         o2 = -1
         t = -99.99
@@ -93,43 +94,43 @@ class ArdParser():
         status_msg = 'msg?'
         code = -1 #0 - o2, 1- dht, 2 - rem
         dht = -1
-        rem = 'rem?'
-        if 'GAS:' in self.ARDSTR and ':O2:!' in self.ARDSTR:
-            gasPos = self.ARDSTR.index('GAS:')
-            o2Pos = self.ARDSTR.index(':O2:!')
+        rem = '?rem?'
+        if 'gas:' in self.ARDSTR and ':o2:!' in self.ARDSTR:
+            gasPos = self.ARDSTR.index('gas:')
+            o2Pos = self.ARDSTR.find(':o2:!', gasPos)
             if gasPos < o2Pos:
-                sub_str = self.ARDSTR[gasPos:o2Pos+1]
-                if 'O22:' in self.ARDSTR and ':O22:!' in self.ARDSTR:
+                sub_str = self.ARDSTR[gasPos:o2Pos+5]
+                if 'o22:' in self.ARDSTR and ':o22:!' in self.ARDSTR:
                     #čia yra ir antras O2 detektorius:
-                    o22Pos = self.ARDSTR.index('O22:')
-                    O22End = self.ARDSTR.index(':O22:!')
+                    o22Pos = self.ARDSTR.index('o22:')
+                    O22End = self.ARDSTR.index(':o22:!')
                     o22 = float(self.ARDSTR[o22Pos:O22End+1])
                 values = sub_str.split(';')
-                ch4 = values[0].replace('GAS:','')
-                o2 = values[2][2:8]
+                ch4 = values[0].replace('gas:','')
+                o2 = values[2][3:8]
                 t = values[1]
                 status_msg = "O2, OK"
                 code = 0
                 self.ARDSTR = self.ARDSTR.replace(sub_str, '')
-        if "REM:" in self.ARDSTR and ':REM:!' in self.ARDSTR:
-            remStart = self.ARDSTR.index('REM:')
-            remEnd = self.ARDSTR.index(':REM:!')
+        if "rem:" in self.ARDSTR and ':rem:!' in self.ARDSTR:
+            remStart = self.ARDSTR.index('rem:')
+            remEnd = self.ARDSTR.find(':rem:!', remStart)
             if remStart < remEnd:
                 rem_ = self.ARDSTR[remStart:remEnd+6]
                 status_msg = 'rem message'
                 rem = rem_[4:-6]
                 code = 2
-                self.ARDSTR = self.ARDSTR.replace(rem_, '')
-        if 'DHT:' in self.ARDSTR and ':DHT:!' in self.ARDSTR:
-            dhtStart = self.ARDSTR.index('DHT:')
-            dhtEnd = self.ARDSTR.index(':DHT:!')
+                self.ARDSTR = self.ARDSTR.replace(rem_, '')            
+        if 'dht:' in self.ARDSTR and ':dht:!' in self.ARDSTR:
+            dhtStart = self.ARDSTR.index('dht:')
+            dhtEnd = self.ARDSTR.find(':dht:!', dhtStart)
             if dhtStart < dhtEnd:
                 dht_ = self.ARDSTR[dhtStart:dhtEnd+6]
                 dht = dht_[4:-6]
                 status_msg ='dht ok'
                 code = 1
-                self.ARDSTR = self.ARDSTR.replace(dht_, '')
-        return o2, t, o22, ch4, status_msg, code, dht, rem
+                self.ARDSTR = self.ARDSTR.replace(dht_, '')            
+        return o2, t, o22, ch4, status_msg, code, dht, rem, s
         pass
 
 
