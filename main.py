@@ -101,6 +101,8 @@ class mainAppW(QtWidgets.QMainWindow):
             idx = self.ui.ucSerialBox.findText(ucP)
             if idx != -1:
                 self.ui.ucSerialBox.setCurrentIndex(idx)
+        self.ui.actionDebug.setIcon(QtGui.QIcon('GUI/Icons/configure.png'))
+        self.ui.actionU_daryti.setIcon(QtGui.QIcon('GUI/Icons/quit.png'))
         pass
 
 
