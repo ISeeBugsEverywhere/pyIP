@@ -9,6 +9,7 @@ class saveW(QtWidgets.QWidget):
         super().__init__()
         self.ui = Ui_saveForm()
         self.ui.setupUi(self)
+        self.ui.saveButton.setIcon(QtGui.QIcon('GUI/Icons/media-floppy.png'))
         self.ui.saveButton.clicked.connect(self.ret_name)
         self.ui.dName.setText(str(dt.datetime.now().date()))
     @pyqtSlot()

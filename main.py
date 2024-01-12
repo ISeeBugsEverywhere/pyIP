@@ -147,6 +147,13 @@ class mainAppW(QtWidgets.QMainWindow):
     
     def expSingleFinished(self, Ni, ErrCode, code, statusas):
         self.check(Ni, ErrCode, code, statusas)
+        t = self.ow.ui.waveLabel.text()
+        i = t.find(':')
+        λ = float(t[i+1:]) #neturi įeiti :
+        data_str = f'{λ:.2f} | {Ni} | {ErrCode}'
+        self.ui.experimentOutputEdit.appendPlainText(data_str)
+        # QThread must be destroyied:
+        self.ExpThread = None
         pass
         
         # self.uC.countNi(Ts,Cth, self.Tz, self.Tq, self.Vq, 1)

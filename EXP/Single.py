@@ -39,5 +39,4 @@ class SingleShot(QObject):
             t = t - step
         Ni, statusas, ErrCode, code, crc_gautas, crc_apsk = self.UC.readNi()
         self.finished.emit(Ni, ErrCode, code, statusas)
-        time.sleep(2)
         pass
