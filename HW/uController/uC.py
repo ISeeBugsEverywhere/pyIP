@@ -13,8 +13,8 @@ from PyQt5.QtCore import QObject, QThread, pyqtSignal, pyqtSlot
 
 class uC():
     crcErr = {0:"OK",1:"CRC32 blogas",2:"Bloga komanda",3:"Blogas parametras",4:"τ>0.1s (timeout)",5:"U per maža",6:"U per didelė"}
-    progress = pyqtSignal(str)
-    finished = pyqtSignal(str)
+    # progress = pyqtSignal(str)
+    # finished = pyqtSignal(str)
     def __init__(self, A):
         super().__init__()
         self.port = serial.Serial() #configure and open it later
@@ -134,11 +134,67 @@ Ni: einama impulsų skaitiklio vertė. (4 baitai)
         cmd = b''.join(cmd_)
         crc = ComputeHash(cmd)
         cmdb = cmd+crc
-        n = self.port.write(cmdb)        
+        try:
+            n = self.port.write(cmdb)
+            return True, n, 'OK'
+        except Exception as ex:
+            return False, -1, str(ex) 
+        pass
+    
+    def readNi(self):
+        '''Atsakymas išsiunčiamas suskaičiavus. Išimtis: jei trukmė =0x00, atsakymas siunčiamas išsyk, o skaičiavimas stabdomas nebus. Skaitiklį tuomet galima nuskaityti iš atminties.
+        Specifiniai_duomenys: 
+        Ni: einama impulsų skaitiklio vertė. (4 baitai)
+        Return: Ni, statusas, ErrCode, code, crc_gautas, crc_apsk'''
+        data = self.port.read(size=2+4+14)
+        statusas, ErrCode, code, crc_gautas, crc_apsk = self.lastBytes(data)
+        Nib = data[4:8]
+        Ni = int.from_bytes(Nib, 'little')
+        return Ni, statusas, ErrCode, code, crc_gautas, crc_apsk
         pass
     
     def lastBytes(self, data):
+        '''
+        statusas: True/False 
+        ErrCode: str -> tekstinis pranešimas klaidos
+        code: [0,1,2,3,4,5,6] - skaitmeninis klaidos kodas 
+        crc_gautas, crc_apsk : CRC kodai
+        Ne visi baitai apdorojami!
+        '''
+        statusas, crc_gautas, crc_apsk = CompareHash(data)
+        ErrCode = self.crcErr[data[-5]]
+        return statusas, ErrCode, int(data[-5]), crc_gautas, crc_apsk
         pass
+    
+# Atsakymas
+
+# Pradžia		0xA5, 0x5A (Yen sign,Z)
+# Ilgis		2 baitai
+# Parsiunčiami duomenys	viso: ilgis-4 baitai
+# CRC32		Visų baitų
+
+
+# Parsiunčiami duomenys yra sudaryti iš specifinių_duomenų(kiekis priklauso nuo komandos)
+# ir statuso_duomenų(14 baitų).
+
+# Statuso_duomenys:
+
+# 3:0	Tm dabar_vykstančio skaičiavimo trukme po 10ms 
+# 5:4*	00HV45_15  šaltinio įtampa 0-4.5kV skalėje (0..0x7fff). Kombinuota iš 00HV45 ir 45HV35
+# 7:6	Iin vidutinė srovė
+# 9:8	kodo_crc  (vietoje versijos numerio)	
+# 10	Statusas
+# 	.0	I50nA500	įėjimo srovės skalė. 0/1 atitinka 50nA/500nA
+# 11	Pakartota komanda
+# 12	Pakartotas nr
+# 13	Err; klaidos kodas:
+# 	0 ok
+# 	1 CRC klaida
+# 	2 bloga komanda
+# 	3 blogas parametras
+# 	4 protokolo taimoutas (laikas tarp siuntos baitų >0.1s)
+# 	5 U per maža
+# 	6 U per didelė
 
 
 

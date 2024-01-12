@@ -293,9 +293,6 @@ class mainAppW(QtWidgets.QMainWindow):
         elif code == 1:
             self.ui.lcdH.display(dht)
         else:
-            # self.ui.responsesField.append("::OUTPUT::\n"+str(s))
-            # self.check("::OUT\n",o2, t, o22, ch4, status_msg, code, dht, rem)
-            # print(fs)
             pass
 
     def responseField(self, s:str):

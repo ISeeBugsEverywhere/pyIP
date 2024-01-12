@@ -7,7 +7,10 @@ def ComputeHash(buffer):
 
 
 def CompareHash(buffer):
-    crc = buffer[-4:]
+    '''
+    crc statusas (True/False); CRC gautas, CRC apskaičiuotas
+    '''
+    crc_gautas = buffer[-4:]
     data = buffer[:-4]
-    crc_ = ComputeHash(data)
-    return crc == crc_, crc, crc_
+    crc_apskaiciuotas = ComputeHash(data)
+    return crc_gautas == crc_apskaiciuotas, crc_gautas, crc_apskaiciuotas
