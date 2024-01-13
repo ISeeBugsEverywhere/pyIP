@@ -33,10 +33,13 @@ class SingleShot(QObject):
         self.UC.countNi(self.Ts, self.Cth, self.Tz, self.Tq, self.Vq, self.cmdnr)
         step = self.Ts/100
         t = self.Ts
-        while t > 0:
+        while t >= 0:
             time.sleep(step)
             self.progress.emit((self.Ts-t)/self.Ts)
             t = t - step
-        Ni, statusas, ErrCode, code, crc_gautas, crc_apsk = self.UC.readNi()
+        time.sleep(1)         
+        Ni, statusas, ErrCode, code, crc_gautas, crc_apsk, data= self.UC.readNi()
+        if not statusas:
+            print(crc_gautas, crc_apsk, data, ErrCode, sep='\n')
         self.finished.emit(Ni, ErrCode, code, statusas)
         pass

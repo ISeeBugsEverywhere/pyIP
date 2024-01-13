@@ -145,11 +145,11 @@ class uC():
         Specifiniai_duomenys: 
         Ni: einama impulsų skaitiklio vertė. (4 baitai)
         Return: Ni, statusas, ErrCode, code, crc_gautas, crc_apsk'''
-        data = self.port.read(size=2+4+14)
+        data = self.port.read(size=26) #kodėl 26 baitai? 4 pradžia, 4 duomenys, 14 spec + 4 crc32 = 26b
         statusas, ErrCode, code, crc_gautas, crc_apsk = self.lastBytes(data)
         Nib = data[4:8]
         Ni = int.from_bytes(Nib, 'little')
-        return Ni, statusas, ErrCode, code, crc_gautas, crc_apsk
+        return Ni, statusas, ErrCode, code, crc_gautas, crc_apsk, data
         pass
     
     def lastBytes(self, data):
@@ -161,7 +161,9 @@ class uC():
         Ne visi baitai apdorojami!
         '''
         statusas, crc_gautas, crc_apsk = CompareHash(data)
-        ErrCode = self.crcErr[data[-5]]
+        ErrCode = self.crcErr.get(data[-5], '-0:'+str(data[-5]))
+        if '-0:' in ErrCode:
+            print(data, int.from_bytes(data[-5], 'little'), '<==', sep='\n')
         return statusas, ErrCode, int(data[-5]), crc_gautas, crc_apsk
         pass
     

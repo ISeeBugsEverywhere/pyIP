@@ -39,7 +39,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.__signals__()
         self.ArdQThread = QThread()
         self.ArduinoParser = ArdParser()
-        self.ExpThread = QThread()
+        self.ExpThread = QThread(parent=self)
         self.ExpObject = None
         V = self.cfg.parser['oriel']['VENDOR_ID']
         P = self.cfg.parser['oriel']['PRODUCT_ID']
@@ -131,6 +131,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.oneBtn.clicked.connect(self.oneMeasurement)
     
     def oneMeasurement(self):
+        self.check('one Measurement')
         Ts = self.ui.TsBox.value()
         Cth = int(self.ui.cthBox.value())
         self.ExpObject = SingleShot(self.uC)
@@ -139,7 +140,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ExpThread.started.connect(self.ExpObject.count)
         self.ExpObject.progress.connect(self.expProgressBarFn)
         self.ExpObject.finished.connect(self.expSingleFinished)
-        self.ExpThread.run()
+        self.ExpThread.start()
     
     def expProgressBarFn(self, p:float):
         self.ui.expProgressBar.setValue(int(p*100))
@@ -149,11 +150,18 @@ class mainAppW(QtWidgets.QMainWindow):
         self.check(Ni, ErrCode, code, statusas)
         t = self.ow.ui.waveLabel.text()
         i = t.find(':')
-        λ = float(t[i+1:]) #neturi įeiti :
+        λ = -1.0
+        try:
+            λ = float(t[i+1:]) #neturi įeiti :
+        except Exception as ex:
+            λ = -1.0
         data_str = f'{λ:.2f} | {Ni} | {ErrCode}'
         self.ui.experimentOutputEdit.appendPlainText(data_str)
         # QThread must be destroyied:
-        self.ExpThread = None
+        # self.ExpThread = QThread(parent=self)
+        self.ui.expProgressBar.setValue(0)
+        self.ExpThread.quit()
+        # self.ExpThread.deleteLater()
         pass
         
         # self.uC.countNi(Ts,Cth, self.Tz, self.Tq, self.Vq, 1)
