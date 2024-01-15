@@ -12,7 +12,7 @@ from HW.uController.Functions import listIntegersToByteArray
 from PyQt5.QtCore import QObject, QThread, pyqtSignal, pyqtSlot
 
 class uC():
-    crcErr = {0:"OK",1:"CRC32 blogas",2:"Bloga komanda",3:"Blogas parametras",4:"τ>0.1s (timeout)",5:"U per maža",6:"U per didelė"}
+    crcErr = {0:"Komada O.K.",1:"CRC32 blogas",2:"Bloga komanda",3:"Blogas parametras",4:"τ>0.1s (timeout)",5:"U per maža",6:"U per didelė"}
     # progress = pyqtSignal(str)
     # finished = pyqtSignal(str)
     def __init__(self, A:str):

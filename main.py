@@ -151,12 +151,15 @@ class mainAppW(QtWidgets.QMainWindow):
         t = self.ow.ui.waveLabel.text()
         i = t.find(':')
         λ = -1.0
+        Uvaldiklio = self.ui.uBox.value()
         try:
             λ = float(t[i+1:]) #neturi įeiti :
         except Exception as ex:
             λ = -1.0
-        data_str = f'{λ:.2f} | {Ni} | {ErrCode}'
+            self.check('λ nenustatytas')
+        data_str = f'{λ:.2f} | {Ni} | {Uvaldiklio}'
         self.ui.experimentOutputEdit.appendPlainText(data_str)
+        self.check(f'{λ:.2f} | {Ni} | {ErrCode}')
         # QThread must be destroyied:
         # self.ExpThread = QThread(parent=self)
         self.ui.expProgressBar.setValue(0)
