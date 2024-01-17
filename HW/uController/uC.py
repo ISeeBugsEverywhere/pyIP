@@ -119,7 +119,7 @@ class uC():
         Atsakymas išsiunčiamas suskaičiavus. Išimtis: jei trukmė =0x00, atsakymas siunčiamas išsyk, o skaičiavimas stabdomas nebus. Skaitiklį tuomet galima nuskaityti iš atminties.
         Specifiniai_duomenys:
         Ni: einama impulsų skaitiklio vertė. (4 baitai)
-        :return:
+        :return:  statusas, įrašytų bitų kiekis, error text (OK arba kitas tekstas)
         '''
         esc = 0x1b.to_bytes(1,'little')
         s = 0x73.to_bytes(1,'little')
