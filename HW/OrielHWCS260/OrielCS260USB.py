@@ -90,6 +90,7 @@ class Oriel():
     def closeShutter(self):
         """
         closes a shutter
+        returns number of bytes written in;
         """
         return self.cmd("SHUTTER C")
         pass
@@ -97,6 +98,7 @@ class Oriel():
     def openShutter(self):
         """
         opens a shutter
+        returns number of bytes written in;
         """
         return self.cmd("SHUTTER O")
         pass

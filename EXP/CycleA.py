@@ -27,6 +27,7 @@ class CycleA(QObject):
         self.bT = 0 #kiek kartų matuoti foną prieš VISĄ šviesinį spektrą
         self.UC = uc
         self.ORIEL = oriel
+        self.end = False
         pass
     
     def set_args(self,Ts, Cth, Tz, Tq, Vq, cmdnr, minE, maxE, step, repeats, backgroundTimes):
@@ -43,5 +44,39 @@ class CycleA(QObject):
         self.bT = backgroundTimes
         pass
     
-    def run():
+    def run(self):
+        '''
+        runs cycle A:
+        from to n times each point
+        '''
+        # dark signal:
+        self.ORIEL.closeShutter()
+        time.sleep(2)
+        for i in range(0, self.bT):
+            statusas, bc, errMsg =  self.UC.countNi(self.Ts,self.Cth,self.Tz,self.Tq,self.Vq,self.cmdnr)
+            if not statusas:
+                self.error.emit(f'{errMsg}', f'Įrašytų baitų kiekis {bc}', 7)
+                self.finished.emit(True)
+                self.end = True
+                break
+            time.sleep(self.Ts*1.1)
+            Ni, statusas, ErrCode, code, crc_gautas, crc_apsk = self.UC.readNi()
+            if not statusas:
+                self.error.emit(f'{ErrCode}', f'CRCs:{crc_gautas}/{crc_apsk}', code)
+                self.finished.emit(True)
+                self.end = True
+                break
+            self.progress.emit(Ni, 10, 'tamsa') #Ni, %, λ
+            pass
+        ce = self.minE
+        # shutter is opened:
+        b = self.ORIEL.openShutter()
+        time.sleep(2)
+        while ce <= self.maxE and not self.end:
+            for i in range(0,self.r):                
+                pass
+            ce = ce + self.step
+            pass
+        self.finished.emit(True)
+        self.end = True
         pass
