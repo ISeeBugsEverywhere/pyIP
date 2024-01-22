@@ -288,7 +288,11 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ArdQThread.quit()
         self.ArdQThread.wait()
         self.oriel.remove()
-        self.oriel = Oriel()
+        V = self.cfg.parser['oriel']['VENDOR_ID']
+        P = self.cfg.parser['oriel']['PRODUCT_ID']
+        self.oriel = Oriel(int(V, 16), int(P, 16))
+        var = self.cfg.parser['uc']['model']
+        self.uC = uC(var)
         self.ui.connectBtn.setText('Prisijungti')
     def connect_fn(self):
         # arduino part:
