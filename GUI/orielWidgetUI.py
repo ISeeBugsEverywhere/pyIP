@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'orielWidgetUI.ui'
+# Form implementation generated from reading ui file '/home/egis/PycharmProjects/PyIP/GUI/UI/orielWidgetUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -45,7 +45,9 @@ class Ui_orielForm(object):
         font = QtGui.QFont()
         font.setPointSize(14)
         self.entryBox.setFont(font)
+        self.entryBox.setDecimals(3)
         self.entryBox.setMaximum(1200.0)
+        self.entryBox.setSingleStep(0.025)
         self.entryBox.setObjectName("entryBox")
         self.gridLayout.addWidget(self.entryBox, 0, 0, 2, 1)
         self.evRadioBtn = QtWidgets.QRadioButton(orielForm)
@@ -59,7 +61,7 @@ class Ui_orielForm(object):
         font.setPointSize(14)
         self.goBtn.setFont(font)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("Icons/play.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("/home/egis/PycharmProjects/PyIP/GUI/UI/Icons/play.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.goBtn.setIcon(icon)
         self.goBtn.setIconSize(QtCore.QSize(64, 64))
         self.goBtn.setObjectName("goBtn")
