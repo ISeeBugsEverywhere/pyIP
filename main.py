@@ -18,6 +18,7 @@ import subprocess
 import glob
 
 from EXP.Single import SingleShot #1nam matavimui
+from CALIBR.IzoQE import IzoEQ
 
 
 
@@ -47,6 +48,7 @@ class mainAppW(QtWidgets.QMainWindow):
         var = self.cfg.parser['uc']['model']
         self.uC = uC(var)
         self.debug = False
+        self.QQ = IzoEQ('CALIBR')
 
 
     def __gui__(self):
@@ -151,13 +153,17 @@ class mainAppW(QtWidgets.QMainWindow):
         t = self.ow.ui.waveLabel.text()
         i = t.find(':')
         λ = -1.0
+        eV = -1.0
         Uvaldiklio = self.ui.uBox.value()
         try:
             λ = float(t[i+1:]) #neturi įeiti :
         except Exception as ex:
             λ = -1.0
             self.check('λ nenustatytas')
-        data_str = f'{λ:.2f} | {Ni} | {Uvaldiklio}'
+        if λ > 0:
+            eV = round(1239.75/λ, 3)
+        EQQ, EEQ = self.QQ.GetCorr(eV, Ni)
+        data_str = f'{λ:.2f} | {eV:.3f} | {Ni} | {EEQ:.2f} | {EQQ:.2f} | {Uvaldiklio}'
         self.ui.experimentOutputEdit.appendPlainText(data_str)
         self.check(f'{λ:.2f} | {Ni} | {ErrCode}')
         # QThread must be destroyied:
@@ -251,9 +257,14 @@ class mainAppW(QtWidgets.QMainWindow):
         pass
 
     def set_voltage_fn(self):
+        self.ui.voltageStatusLabel.setPixmap(QtGui.QPixmap('GUI/Icons/voltageStatusQ.png'))
         v =  self.ui.uBox.value()
         crc_status, crcr, crc_r, ErrCode, cmdNr, cmdRep, crc_v, cmd_crc = self.uC.setVoltage(v/1000.0, 1, 2 )
         self.check(crc_status, crcr, crc_r, ErrCode, cmdNr, cmdRep, crc_v, cmd_crc)
+        if crc_status:
+            self.ui.voltageStatusLabel.setPixmap(QtGui.QPixmap('GUI/Icons/voltageStatusOK.png'))
+        else:
+            self.ui.voltageStatusLabel.setPixmap(QtGui.QPixmap('GUI/Icons/voltageStatusFF.png'))
 
     def save_data(self, fname:str):
         data = self.ui.experimentOutputEdit.toPlainText()

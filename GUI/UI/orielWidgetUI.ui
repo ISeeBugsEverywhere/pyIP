@@ -69,8 +69,14 @@
          <pointsize>14</pointsize>
         </font>
        </property>
+       <property name="decimals">
+        <number>3</number>
+       </property>
        <property name="maximum">
         <double>1200.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.025000000000000</double>
        </property>
       </widget>
      </item>
