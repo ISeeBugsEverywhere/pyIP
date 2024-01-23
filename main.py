@@ -138,12 +138,27 @@ class mainAppW(QtWidgets.QMainWindow):
         pass
     
     def mCycleStart(self):
-        if 'A' in self.ui.expStyleComboBox.currentText():
+        r = False
+        if 'matuot' in self.ui.doBtn.text().lower():
+            r = True
+            self.ui.doBtn.setText('STOP')
+        elif 'sto' in self.ui.doBtn.text().lower():
+            r = False
+            self.ExpObject.setEnd()
+            self.ui.doBtn.setText('Matuoti')
+            self.ui.expProgressBar.setValue(0)
+            self.ExpThread.quit()
+        if 'A' in self.ui.expStyleComboBox.currentText() and r:
             # A:
             Ts = self.ui.TsBox.value()
             Cth = int(self.ui.cthBox.value())
-            self.ExpObject = CycleA(self.uC)
-            self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1)
+            maxE = self.ui.stopEVBox.value()
+            minE = self.ui.startEVBox.value()
+            step = self.ui.stepEVBox.value()
+            repeats = self.ui.repeatBox.value()
+            backgroundTimes = self.ui.darkCounterBox.value()
+            self.ExpObject = CycleA(self.uC, self.oriel)
+            self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1, minE, maxE, step, repeats, backgroundTimes)
             self.ExpObject.moveToThread(self.ExpThread)
             self.ExpThread.started.connect(self.ExpObject.run)
             self.ExpObject.progress.connect(self.cycleProgress)
@@ -151,10 +166,10 @@ class mainAppW(QtWidgets.QMainWindow):
             self.ExpObject.error.connect(self.cycleError)
             self.ExpThread.start()
             pass
-        elif 'B' in self.ui.expStyleComboBox.currentText():
+        elif 'B' in self.ui.expStyleComboBox.currentText() and r:
             # B:
             pass
-        elif 'B' in self.ui.expStyleComboBox.currentText():
+        elif 'B' in self.ui.expStyleComboBox.currentText() and r:
             # C
             pass
         pass
@@ -163,15 +178,22 @@ class mainAppW(QtWidgets.QMainWindow):
         # progress = pyqtSignal(int, int, str) #Ni, %, λ
         # finished = pyqtSignal(bool)
         # error = pyqtSignal(str, str, int) #Exception, ErrCode, errcode
+        msg = f'{λ} | {Ni:.2f}'
+        self.ui.experimentOutputEdit.appendPlainText(msg)
+        self.ui.expProgressBar.setValue(p)
         pass
     
     def cycleFinished(self, b):
         # progress = pyqtSignal(int, int, str) #Ni, %, λ
         # finished = pyqtSignal(bool)
         # error = pyqtSignal(str, str, int) #Exception, ErrCode, errcode
+        self.ExpThread.quit()
+        self.ui.expProgressBar.setValue(0)
         pass
     
     def cycleError(self, ex, ErrMsg, errCode):
+        self.check(ex, ErrMsg, errCode)
+        self.ExpThread.quit()
         pass
     
     def oneMeasurement(self):

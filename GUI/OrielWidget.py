@@ -5,7 +5,7 @@ import time, math
 from PyQt5.QtCore import pyqtSlot, pyqtSignal
 
 
-WAVE_LABEL_TEXT = "Current wave [nm]: {}"
+WAVE_LABEL_TEXT = "λ [nm]: {}"
 
 class OrielControlWidget(QtWidgets.QWidget):
     qtSignal = pyqtSignal(str)

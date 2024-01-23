@@ -49,6 +49,9 @@ class CycleA(QObject):
         runs cycle A:
         from to n times each point
         '''
+        p = 0
+        points = ((self.maxE - self.minE)/self.step*self.r+self.bT*2)
+        pct = int(p/points*100)
         # dark signal:
         self.ORIEL.closeShutter()
         time.sleep(1)
@@ -60,13 +63,15 @@ class CycleA(QObject):
                 self.end = True
                 break
             time.sleep(self.Ts*1.1)
-            Ni, statusas, ErrCode, code, crc_gautas, crc_apsk = self.UC.readNi()
+            Ni, statusas, ErrCode, code, crc_gautas, crc_apsk, data = self.UC.readNi()
             if not statusas:
                 self.error.emit(f'{ErrCode}', f'CRCs:{crc_gautas}/{crc_apsk}', code)
                 self.finished.emit(True)
                 self.end = True
                 break
-            self.progress.emit(Ni, 10, 'tamsa') #Ni, %, λ
+            p = p + 1
+            pct = int(p/points*100)
+            self.progress.emit(Ni, pct, 'tamsa') #Ni, %, λ
             pass
         # end of first dark part
         ce = self.minE # einama energijų didėjimo kryptimi
@@ -89,13 +94,15 @@ class CycleA(QObject):
                         self.end = True
                         break
                     time.sleep(self.Ts*1.1)
-                    Ni, statusas, ErrCode, code, crc_gautas, crc_apsk = self.UC.readNi()
+                    Ni, statusas, ErrCode, code, crc_gautas, crc_apsk, data = self.UC.readNi()
                     if not statusas:
                         self.error.emit(f'{ErrCode}', f'CRCs:{crc_gautas}/{crc_apsk}', code)
                         self.finished.emit(True)
                         self.end = True
                         break
-                    self.progress.emit(Ni, 10, 'tamsa') #Ni, %, λ
+                    p = p + 1
+                    pct = int(p/points*100)
+                    self.progress.emit(Ni, pct, str(λ)) #Ni, %, λ
                     pass
                 else:
                     self.error.emit('ORIEL - no bytes were written', '-9ERR', 9)
@@ -109,6 +116,8 @@ class CycleA(QObject):
         self.ORIEL.closeShutter()
         time.sleep(1)
         for i in range(0, self.bT):
+            if self.end:
+                    break
             statusas, bc, errMsg =  self.UC.countNi(self.Ts,self.Cth,self.Tz,self.Tq,self.Vq,self.cmdnr)
             if not statusas:
                 self.error.emit(f'{errMsg}', f'Įrašytų baitų kiekis {bc}', 7)
@@ -116,16 +125,21 @@ class CycleA(QObject):
                 self.end = True
                 break
             time.sleep(self.Ts*1.1)
-            Ni, statusas, ErrCode, code, crc_gautas, crc_apsk = self.UC.readNi()
+            Ni, statusas, ErrCode, code, crc_gautas, crc_apsk, data = self.UC.readNi()
             if not statusas:
                 self.error.emit(f'{ErrCode}', f'CRCs:{crc_gautas}/{crc_apsk}', code)
                 self.finished.emit(True)
                 self.end = True
                 break
-            self.progress.emit(Ni, 10, 'tamsa') #Ni, %, λ
+            p = p + 1
+            pct = int(p/points*100)
+            self.progress.emit(Ni, pct, 'tamsa') #Ni, %, λ
             pass
         # end of dark
         # end of measurement cycle
         self.finished.emit(True)
         self.end = True
         pass
+    
+    def setEnd(self):
+        self.end = True
