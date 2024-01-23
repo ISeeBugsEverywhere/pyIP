@@ -18,6 +18,7 @@ import subprocess
 import glob
 
 from EXP.Single import SingleShot #1nam matavimui
+from EXP.CycleA import CycleA #cycleA
 from CALIBR.IzoQE import IzoEQ
 
 
@@ -130,7 +131,48 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.reloadParamsBtn.clicked.connect(self.reloadParamsFn)
         self.ui.actionDebug.triggered.connect(self.dbgfn)
         # valdiklis:
-        self.ui.oneBtn.clicked.connect(self.oneMeasurement)
+        self.ui.oneBtn.clicked.connect(self.oneMeasurement) #singleshot'as
+        # Cycles (A/B/C)
+        self.ui.doBtn.clicked.connect(self.mCycleStart)
+        
+        pass
+    
+    def mCycleStart(self):
+        if 'A' in self.ui.expStyleComboBox.currentText():
+            # A:
+            Ts = self.ui.TsBox.value()
+            Cth = int(self.ui.cthBox.value())
+            self.ExpObject = CycleA(self.uC)
+            self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1)
+            self.ExpObject.moveToThread(self.ExpThread)
+            self.ExpThread.started.connect(self.ExpObject.run)
+            self.ExpObject.progress.connect(self.cycleProgress)
+            self.ExpObject.finished.connect(self.cycleFinished)
+            self.ExpObject.error.connect(self.cycleError)
+            self.ExpThread.start()
+            pass
+        elif 'B' in self.ui.expStyleComboBox.currentText():
+            # B:
+            pass
+        elif 'B' in self.ui.expStyleComboBox.currentText():
+            # C
+            pass
+        pass
+    
+    def cycleProgress(self, Ni, p, λ):
+        # progress = pyqtSignal(int, int, str) #Ni, %, λ
+        # finished = pyqtSignal(bool)
+        # error = pyqtSignal(str, str, int) #Exception, ErrCode, errcode
+        pass
+    
+    def cycleFinished(self, b):
+        # progress = pyqtSignal(int, int, str) #Ni, %, λ
+        # finished = pyqtSignal(bool)
+        # error = pyqtSignal(str, str, int) #Exception, ErrCode, errcode
+        pass
+    
+    def cycleError(self, ex, ErrMsg, errCode):
+        pass
     
     def oneMeasurement(self):
         self.check('one Measurement')

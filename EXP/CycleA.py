@@ -51,7 +51,7 @@ class CycleA(QObject):
         '''
         # dark signal:
         self.ORIEL.closeShutter()
-        time.sleep(2)
+        time.sleep(1)
         for i in range(0, self.bT):
             statusas, bc, errMsg =  self.UC.countNi(self.Ts,self.Cth,self.Tz,self.Tq,self.Vq,self.cmdnr)
             if not statusas:
@@ -68,15 +68,64 @@ class CycleA(QObject):
                 break
             self.progress.emit(Ni, 10, 'tamsa') #Ni, %, λ
             pass
-        ce = self.minE
+        # end of first dark part
+        ce = self.minE # einama energijų didėjimo kryptimi
         # shutter is opened:
         b = self.ORIEL.openShutter()
-        time.sleep(2)
+        time.sleep(1)
         while ce <= self.maxE and not self.end:
-            for i in range(0,self.r):                
-                pass
+            for i in range(0,self.r):
+                if self.end:
+                    break               
+                # oriel eina į λ:
+                λ = round(1239.75/ce, 3)
+                n = self.ORIEL.gowave(λ)
+                if n > 0:
+                    # measure Ni:
+                    statusas, bc, errMsg =  self.UC.countNi(self.Ts,self.Cth,self.Tz,self.Tq,self.Vq,self.cmdnr)
+                    if not statusas:
+                        self.error.emit(f'{errMsg}', f'Įrašytų baitų kiekis {bc}', 7)
+                        self.finished.emit(True)
+                        self.end = True
+                        break
+                    time.sleep(self.Ts*1.1)
+                    Ni, statusas, ErrCode, code, crc_gautas, crc_apsk = self.UC.readNi()
+                    if not statusas:
+                        self.error.emit(f'{ErrCode}', f'CRCs:{crc_gautas}/{crc_apsk}', code)
+                        self.finished.emit(True)
+                        self.end = True
+                        break
+                    self.progress.emit(Ni, 10, 'tamsa') #Ni, %, λ
+                    pass
+                else:
+                    self.error.emit('ORIEL - no bytes were written', '-9ERR', 9)
+                    self.finished.emit(True)
+                    self.end = True
             ce = ce + self.step
             pass
+        # end of measurement cycle
+        # dark signal, after main cycle:
+        # dark signal:
+        self.ORIEL.closeShutter()
+        time.sleep(1)
+        for i in range(0, self.bT):
+            statusas, bc, errMsg =  self.UC.countNi(self.Ts,self.Cth,self.Tz,self.Tq,self.Vq,self.cmdnr)
+            if not statusas:
+                self.error.emit(f'{errMsg}', f'Įrašytų baitų kiekis {bc}', 7)
+                self.finished.emit(True)
+                self.end = True
+                break
+            time.sleep(self.Ts*1.1)
+            Ni, statusas, ErrCode, code, crc_gautas, crc_apsk = self.UC.readNi()
+            if not statusas:
+                self.error.emit(f'{ErrCode}', f'CRCs:{crc_gautas}/{crc_apsk}', code)
+                self.finished.emit(True)
+                self.end = True
+                break
+            self.progress.emit(Ni, 10, 'tamsa') #Ni, %, λ
+            pass
+        # end of dark
+        # end of measurement cycle
         self.finished.emit(True)
         self.end = True
         pass

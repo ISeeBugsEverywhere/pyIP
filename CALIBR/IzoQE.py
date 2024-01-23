@@ -23,6 +23,7 @@ class IzoEQ():
             print(ex)
             print(eV)
             print(r)
+            t = -1
         return t
         pass
     
@@ -39,6 +40,7 @@ class IzoEQ():
             print(ex)
             print(eV)
             print(r)
+            t = -1
         return t
         pass
     
