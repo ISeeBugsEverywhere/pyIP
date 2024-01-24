@@ -17,11 +17,14 @@ from HW.uController.uC import uC
 import subprocess
 import glob
 
+import pyqtgraph as pq
+
 from EXP.Single import SingleShot #1nam matavimui
 from EXP.CycleA import CycleA #cycleA
+from EXP.CycleB import CycleB #cycleB
 from CALIBR.IzoQE import IzoEQ
 
-
+MSG = f"{'E[eV]': ^10}{'Ni[c]': ^10}{'EQQ/s': ^10}{'EEQ/s': ^10}{'O2[%]': ^10}{'U[V]': ^10}\n"+'='*60
 
 
 class mainAppW(QtWidgets.QMainWindow):
@@ -50,6 +53,9 @@ class mainAppW(QtWidgets.QMainWindow):
         self.uC = uC(var)
         self.debug = False
         self.QQ = IzoEQ('CALIBR')
+        self.plotData = {}
+        self.eVs = []
+        self.Nis = []
 
 
     def __gui__(self):
@@ -110,7 +116,11 @@ class mainAppW(QtWidgets.QMainWindow):
             if idx != -1:
                 self.ui.ucSerialBox.setCurrentIndex(idx)
         self.ui.actionDebug.setIcon(QtGui.QIcon('GUI/Icons/configure.png'))
-        self.ui.actionU_daryti.setIcon(QtGui.QIcon('GUI/Icons/quit.png'))
+        self.ui.actionU_daryti.setIcon(QtGui.QIcon('GUI/Icons/quit.png'))        
+        self.ui.experimentOutputEdit.setPlainText(MSG)
+        self.ui.plotWidget.setBackground('#FFFFFF')
+        self.ui.plotWidget.getPlotItem().getAxis('bottom').setLabel(text='Energija', units='eV')
+        self.ui.plotWidget.getPlotItem().getAxis('left').setLabel(text='Ni[c]')
         pass
 
 
@@ -149,7 +159,7 @@ class mainAppW(QtWidgets.QMainWindow):
             self.ui.expProgressBar.setValue(0)
             self.ExpThread.quit()
         if 'A' in self.ui.expStyleComboBox.currentText() and r:
-            # A:
+            # A:            
             Ts = self.ui.TsBox.value()
             Cth = int(self.ui.cthBox.value())
             maxE = self.ui.stopEVBox.value()
@@ -167,19 +177,45 @@ class mainAppW(QtWidgets.QMainWindow):
             self.ExpThread.start()
             pass
         elif 'B' in self.ui.expStyleComboBox.currentText() and r:
-            # B:
+            # :B
+            # B:            
+            Ts = self.ui.TsBox.value()
+            Cth = int(self.ui.cthBox.value())
+            maxE = self.ui.stopEVBox.value()
+            minE = self.ui.startEVBox.value()
+            step = self.ui.stepEVBox.value()
+            repeats = self.ui.repeatBox.value()
+            backgroundTimes = self.ui.darkCounterBox.value()
+            self.ExpObject = CycleB(self.uC, self.oriel)
+            self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1, minE, maxE, step, repeats, backgroundTimes)
+            self.ExpObject.moveToThread(self.ExpThread)
+            self.ExpThread.started.connect(self.ExpObject.run)
+            self.ExpObject.progress.connect(self.cycleProgress)
+            self.ExpObject.finished.connect(self.cycleFinished)
+            self.ExpObject.error.connect(self.cycleError)
+            self.ExpThread.start()
             pass
-        elif 'B' in self.ui.expStyleComboBox.currentText() and r:
+        elif 'C' in self.ui.expStyleComboBox.currentText() and r:
             # C
+            self.check('C dalis nerealizuota', ignore=True)
             pass
         pass
     
-    def cycleProgress(self, Ni, p, λ):
-        # progress = pyqtSignal(int, int, str) #Ni, %, λ
+    def cycleProgress(self, Ni, p, eV):
+        # progress = pyqtSignal(int, int, str) #Ni, %, eV (int, int, str!!!)
         # finished = pyqtSignal(bool)
         # error = pyqtSignal(str, str, int) #Exception, ErrCode, errcode
-        msg = f'{λ} | {Ni:.2f}'
+        if eV.lower() == 'tamsa':
+            eV = -1
+        Ts = self.ui.TsBox.value()
+        EQQ, EEQ = self.QQ.GetCorr(round(float(eV), 3), Ni, Ts)
+        if eV == -1:
+            eV = 'Tamsa'
+        o2 = self.ui.lcdO2.value()
+        Uvaldiklio = self.ui.uBox.value()
+        msg = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{Uvaldiklio: ^10}'
         self.ui.experimentOutputEdit.appendPlainText(msg)
+        self.plotPoints(eV, Ni)
         self.ui.expProgressBar.setValue(p)
         pass
     
@@ -192,7 +228,7 @@ class mainAppW(QtWidgets.QMainWindow):
         pass
     
     def cycleError(self, ex, ErrMsg, errCode):
-        self.check(ex, ErrMsg, errCode)
+        self.check(ex, ErrMsg, errCode, ignore=True)
         self.ExpThread.quit()
         pass
     
@@ -226,8 +262,10 @@ class mainAppW(QtWidgets.QMainWindow):
             self.check('λ nenustatytas')
         if λ > 0:
             eV = round(1239.75/λ, 3)
-        EQQ, EEQ = self.QQ.GetCorr(eV, Ni)
-        data_str = f'{λ:.2f} | {eV:.3f} | {Ni} | {EEQ:.2f} | {EQQ:.2f} | {Uvaldiklio}'
+        Ts = self.ui.TsBox.value()
+        EQQ, EEQ = self.QQ.GetCorr(eV, Ni, Ts)
+        o2 = self.ui.lcdO2.value()
+        data_str = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{Uvaldiklio: ^10}'
         self.ui.experimentOutputEdit.appendPlainText(data_str)
         self.check(f'{λ:.2f} | {Ni} | {ErrCode}')
         # QThread must be destroyied:
@@ -247,8 +285,8 @@ class mainAppW(QtWidgets.QMainWindow):
             self.ui.responsesField.append("::DEBUG DISABLED::")
             self.debug = False
     
-    def check(self, *msg):
-        if self.debug:
+    def check(self, *msg, ignore=False):
+        if self.debug and not ignore:
             if type(msg) is str:
                 self.ui.responsesField.append(msg)
             elif type(msg) is list or type(msg) is tuple:
@@ -257,6 +295,12 @@ class mainAppW(QtWidgets.QMainWindow):
                     n.append(str(i))
                 m = ' '.join(n)
                 self.ui.responsesField.append(m)
+        else:
+            n = []
+            for i in msg:
+                n.append(str(i))
+            m = ' '.join(n)
+            self.ui.responsesField.append(m)
     
     def reloadParamsFn(self):
         # self.cfg = None
@@ -337,6 +381,11 @@ class mainAppW(QtWidgets.QMainWindow):
         f_ = open(fp, mode='w')
         f_.write(data)
         f_.close()
+        self.ui.experimentOutputEdit.setPlainText(MSG)
+        self.plotData = {}
+        self.eVs = []
+        self.Nis = []
+        self.ui.plotWidget.clear()
 
 
     def cnt_fn(self):
@@ -417,6 +466,19 @@ class mainAppW(QtWidgets.QMainWindow):
 
     def responseField(self, s:str):
         self.ui.responsesField.append(s)
+        pass
+    
+    def plotPoints(self, eV, Ni):
+        ev = -1.0
+        if eV != 'Tamsa':
+            ev = float(eV)
+            self.plotData[ev] = Ni
+            self.eVs.append(ev)
+            self.Nis.append(Ni)
+        self.ui.plotWidget.clear()
+        scItem = pq.ScatterPlotItem()
+        scItem.setData(x=self.eVs, y=self.Nis)
+        self.ui.plotWidget.addItem(scItem)
         pass
 
 

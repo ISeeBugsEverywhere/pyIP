@@ -9,7 +9,7 @@ from HW.OrielHWCS260.OrielCS260USB import Oriel
 
 
 class CycleA(QObject):
-    progress = pyqtSignal(int, int, str) #Ni, %, λ
+    progress = pyqtSignal(int, int, str) #Ni, %, eV
     finished = pyqtSignal(bool)
     error = pyqtSignal(str, str, int) #Exception, ErrCode, errcode
     def __init__(self, uc:uC, oriel:Oriel):
@@ -71,7 +71,7 @@ class CycleA(QObject):
                 break
             p = p + 1
             pct = int(p/points*100)
-            self.progress.emit(Ni, pct, 'tamsa') #Ni, %, λ
+            self.progress.emit(Ni, pct, 'Tamsa') #Ni, %, eV
             pass
         # end of first dark part
         ce = self.minE # einama energijų didėjimo kryptimi
@@ -102,7 +102,7 @@ class CycleA(QObject):
                         break
                     p = p + 1
                     pct = int(p/points*100)
-                    self.progress.emit(Ni, pct, str(λ)) #Ni, %, λ
+                    self.progress.emit(Ni, pct, f'{ce:.3f}') #Ni, %, λ/eV
                     pass
                 else:
                     self.error.emit('ORIEL - no bytes were written', '-9ERR', 9)
@@ -133,7 +133,7 @@ class CycleA(QObject):
                 break
             p = p + 1
             pct = int(p/points*100)
-            self.progress.emit(Ni, pct, 'tamsa') #Ni, %, λ
+            self.progress.emit(Ni, pct, 'Tamsa') #Ni, %, eV
             pass
         # end of dark
         # end of measurement cycle

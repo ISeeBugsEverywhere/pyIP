@@ -666,11 +666,6 @@
                  <string>B (min=&gt;maks, spektras x N)</string>
                 </property>
                </item>
-               <item>
-                <property name="text">
-                 <string>C (min=&gt;maks, prieš kiekvieną tašką matuojamas fonas)</string>
-                </property>
-               </item>
               </widget>
              </item>
              <item row="0" column="3">
@@ -895,7 +890,13 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_10">
              <item row="0" column="0">
-              <widget class="QPlainTextEdit" name="experimentOutputEdit"/>
+              <widget class="QPlainTextEdit" name="experimentOutputEdit">
+               <property name="font">
+                <font>
+                 <family>Monospace</family>
+                </font>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>

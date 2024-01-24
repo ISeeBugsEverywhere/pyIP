@@ -20,9 +20,9 @@ class IzoEQ():
         try:
             t = float(r)
         except Exception as ex:
-            print(ex)
-            print(eV)
-            print(r)
+            # print(ex)
+            # print(eV)
+            # print(r)
             t = -1
         return t
         pass
@@ -37,23 +37,23 @@ class IzoEQ():
         try:
             t = float(r)
         except Exception as ex:
-            print(ex)
-            print(eV)
-            print(r)
+            # print(ex)
+            # print(eV)
+            # print(r)
             t = -1
         return t
         pass
     
-    def GetCorr(self, eV, Ni):
+    def GetCorr(self, eV, Ni, t):
         '''
         eV, Ni
-        return: EQQ, EEQ (IzoQ, IzoE)
+        return: EQQ, EEQ (IzoQ, IzoE); Per 1 sekundę!
         '''
         q = self.GetQQ(eV)
         e = self.GetEE(eV)
         EQQ = Ni
         EEQ = Ni
         if q > 0 and e > 0:
-            EQQ = Ni/q
-            EEQ = Ni/e
+            EQQ = Ni/q/t
+            EEQ = Ni/e/t
         return EQQ, EEQ
