@@ -121,6 +121,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.plotWidget.setBackground('#FFFFFF')
         self.ui.plotWidget.getPlotItem().getAxis('bottom').setLabel(text='Energija', units='eV')
         self.ui.plotWidget.getPlotItem().getAxis('left').setLabel(text='Ni[c]')
+        # self.ui.plotWidget.getPlotItem().getAxis('left').setTextPen('k')
         pass
 
 
@@ -167,6 +168,7 @@ class mainAppW(QtWidgets.QMainWindow):
             step = self.ui.stepEVBox.value()
             repeats = self.ui.repeatBox.value()
             backgroundTimes = self.ui.darkCounterBox.value()
+            self.ExpThread = QThread(parent=self)
             self.ExpObject = CycleA(self.uC, self.oriel)
             self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1, minE, maxE, step, repeats, backgroundTimes)
             self.ExpObject.moveToThread(self.ExpThread)
@@ -186,6 +188,7 @@ class mainAppW(QtWidgets.QMainWindow):
             step = self.ui.stepEVBox.value()
             repeats = self.ui.repeatBox.value()
             backgroundTimes = self.ui.darkCounterBox.value()
+            self.ExpThread = QThread(parent=self)
             self.ExpObject = CycleB(self.uC, self.oriel)
             self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1, minE, maxE, step, repeats, backgroundTimes)
             self.ExpObject.moveToThread(self.ExpThread)
@@ -223,6 +226,8 @@ class mainAppW(QtWidgets.QMainWindow):
         # progress = pyqtSignal(int, int, str) #Ni, %, λ
         # finished = pyqtSignal(bool)
         # error = pyqtSignal(str, str, int) #Exception, ErrCode, errcode
+        self.ExpObject.setEnd()
+        self.ui.doBtn.setText('Matuoti')
         self.ExpThread.quit()
         self.ui.expProgressBar.setValue(0)
         pass
