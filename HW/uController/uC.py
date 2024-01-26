@@ -129,7 +129,8 @@ class uC():
         Tzb = (Tz*100).to_bytes(1,'little')
         Tqb = (Tq*100).to_bytes(2, 'little') #!
         Vqb = int(Vq/0.392).to_bytes(1, 'little')
-        Cthb = int(Cth).to_bytes(1, 'little')
+        Cthb = int(Cth*77.5757).to_bytes(1, 'little') # korekcija
+        print("::CTHB:", Cthb)
         cmd_ = [esc, s, nr, Tsb, Tzb,Tqb[1].to_bytes(1,'little'), Tqb[0].to_bytes(1,'little'), Cthb, Vqb]
         cmd = b''.join(cmd_)
         crc = ComputeHash(cmd)
@@ -152,7 +153,7 @@ class uC():
         Ni = int.from_bytes(Nib, 'little')
         # for debug purposes:
         NiBig = int.from_bytes(Nib, 'big')
-        print("::Ni, NiBig::", Ni, NiBig)
+        # print("::Ni, NiBig::", Ni, NiBig)
         return Ni, statusas, ErrCode, code, crc_gautas, crc_apsk, data
         pass
     

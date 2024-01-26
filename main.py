@@ -243,7 +243,7 @@ class mainAppW(QtWidgets.QMainWindow):
     def oneMeasurement(self):
         self.check('one Measurement')
         Ts = self.ui.TsBox.value()
-        Cth = int(self.ui.cthBox.value())
+        Cth = self.ui.cthBox.value()
         self.check("::CTH", Cth)
         self.ExpObject = SingleShot(self.uC)
         self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1)
