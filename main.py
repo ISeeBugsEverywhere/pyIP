@@ -214,8 +214,8 @@ class mainAppW(QtWidgets.QMainWindow):
         if eV.lower() == 'tamsa':
             eV = -1
         else:
-            λ = round(1239.75/eV, 3)
-            self.ow.ui.waveLabel.setText(WAVE_LABEL_TEXT.format(λ))
+            cpl = round(1239.75/float(eV), 3)
+            self.ow.ui.waveLabel.setText(WAVE_LABEL_TEXT.format(cpl))
         Ts = self.ui.TsBox.value()
         EQQ, EEQ = self.QQ.GetCorr(round(float(eV), 3), Ni, Ts)
         if eV == -1:
