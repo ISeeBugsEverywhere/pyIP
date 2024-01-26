@@ -244,6 +244,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.check('one Measurement')
         Ts = self.ui.TsBox.value()
         Cth = int(self.ui.cthBox.value())
+        self.check("::CTH", Cth)
         self.ExpObject = SingleShot(self.uC)
         self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1)
         self.ExpObject.moveToThread(self.ExpThread)
@@ -294,16 +295,13 @@ class mainAppW(QtWidgets.QMainWindow):
             self.debug = False
     
     def check(self, *msg, ignore=False):
-        if self.debug and not ignore:
-            if type(msg) is str:
-                self.ui.responsesField.append(msg)
-            elif type(msg) is list or type(msg) is tuple:
-                n = []
-                for i in msg:
-                    n.append(str(i))
-                m = ' '.join(n)
-                self.ui.responsesField.append(m)
-        else:
+        if not self.debug and ignore:            
+            n = []
+            for i in msg:
+                n.append(str(i))
+            m = ' '.join(n)
+            self.ui.responsesField.append(m)
+        elif self.debug:
             n = []
             for i in msg:
                 n.append(str(i))
