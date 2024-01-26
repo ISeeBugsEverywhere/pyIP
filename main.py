@@ -465,7 +465,7 @@ class mainAppW(QtWidgets.QMainWindow):
             if 'opened' in rem.lower():
                 self.ui.shutterSttausLabel.setText('ATID.')
         elif code == 0:
-            self.ui.lcdO2.display(o2)
+            self.ui.lcdO2.display(o2.replace(':',''))
             self.ui.lcdT.display(t)
         elif code == 1:
             self.ui.lcdH.display(dht)
