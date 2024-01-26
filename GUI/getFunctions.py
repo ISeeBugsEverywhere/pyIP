@@ -17,7 +17,7 @@ def get_serial_ports():
             k = k + 1
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
         ttyUBSs = glob.glob('/dev/ttyUSB*')
-        ACTMs = glob.glob('/dev/ttyA*')
+        ACTMs = glob.glob('/dev/ttyAC*')
         if len(ACTMs) > 0:
             ttyUBSs.extend(ACTMs)
         for i in ttyUBSs:
