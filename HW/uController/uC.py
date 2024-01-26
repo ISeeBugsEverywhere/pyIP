@@ -130,7 +130,7 @@ class uC():
         Tqb = (Tq*100).to_bytes(2, 'little') #!
         Vqb = int(Vq/0.392).to_bytes(1, 'little')
         Cthb = int(Cth*77.5757).to_bytes(1, 'little') # korekcija
-        print("::CTHB:", Cthb)
+        # print("::CTHB:", Cthb)
         cmd_ = [esc, s, nr, Tsb, Tzb,Tqb[1].to_bytes(1,'little'), Tqb[0].to_bytes(1,'little'), Cthb, Vqb]
         cmd = b''.join(cmd_)
         crc = ComputeHash(cmd)

@@ -3,7 +3,7 @@ import sys, os
 import numpy as np
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QThread, QObject
 
-from GUI.OrielWidget import OrielControlWidget
+from GUI.OrielWidget import OrielControlWidget, WAVE_LABEL_TEXT
 from GUI.mainIPWindowUI import Ui_IpMain
 from GUI.saveWidget import saveW
 
@@ -213,6 +213,9 @@ class mainAppW(QtWidgets.QMainWindow):
         # error = pyqtSignal(str, str, int) #Exception, ErrCode, errcode
         if eV.lower() == 'tamsa':
             eV = -1
+        else:
+            λ = round(1239.75/eV, 3)
+            self.ow.ui.waveLabel.setText(WAVE_LABEL_TEXT.format(λ))
         Ts = self.ui.TsBox.value()
         EQQ, EEQ = self.QQ.GetCorr(round(float(eV), 3), Ni, Ts)
         if eV == -1:
