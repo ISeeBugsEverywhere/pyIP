@@ -121,7 +121,10 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.plotWidget.setBackground('#FFFFFF')
         self.ui.plotWidget.getPlotItem().getAxis('bottom').setLabel(text='Energija', units='eV')
         self.ui.plotWidget.getPlotItem().getAxis('left').setLabel(text='Ni[c]')
-        # self.ui.plotWidget.getPlotItem().getAxis('left').setTextPen('k')
+        mpen = QtGui.QPen(QtGui.QColor('black'))
+        mpen.setWidth(2)
+        self.ui.plotWidget.getPlotItem().getAxis('left').setTextPen(mpen)
+        self.ui.plotWidget.getPlotItem().getAxis('bottom').setTextPen(mpen)
         pass
 
 
@@ -482,6 +485,13 @@ class mainAppW(QtWidgets.QMainWindow):
             self.Nis.append(Ni)
         self.ui.plotWidget.clear()
         scItem = pq.ScatterPlotItem()
+        scItem.setSize(16)
+        mPen = QtGui.QPen()
+        mPen.setColor(QtGui.QColor('#06470c'))
+        mPen.setWidth(3)
+        scItem.setPen(mPen)
+        mBrush = QtGui.QBrush()
+        mBrush.setColor(QtGui.QColor('#06470c'))
         scItem.setData(x=self.eVs, y=self.Nis)
         self.ui.plotWidget.addItem(scItem)
         pass

@@ -54,6 +54,8 @@ class IzoEQ():
         EQQ = Ni
         EEQ = Ni
         if q > 0 and e > 0:
-            EQQ = Ni/q/t
-            EEQ = Ni/e/t
-        return EQQ, EEQ
+            EQQ = Ni/q
+            EEQ = Ni/e
+        # dalyba vykdoma čia, kad visais atvejais
+        # būtų /s diemnsija
+        return EQQ/t, EEQ/t
