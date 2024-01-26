@@ -374,8 +374,8 @@ class mainAppW(QtWidgets.QMainWindow):
 
     def set_voltage_fn(self):
         self.ui.voltageStatusLabel.setPixmap(QtGui.QPixmap('GUI/Icons/voltageStatusQ.png'))
-        v =  self.ui.uBox.value()
-        crc_status, crcr, crc_r, ErrCode, cmdNr, cmdRep, crc_v, cmd_crc = self.uC.setVoltage(v/1000.0, 1, 2 )
+        kV =  int(self.ui.uBox.value() / 1000.0)
+        crc_status, crcr, crc_r, ErrCode, cmdNr, cmdRep, crc_v, cmd_crc = self.uC.setVoltage(kV, 1, 2 )
         self.check(crc_status, crcr, crc_r, ErrCode, cmdNr, cmdRep, crc_v, cmd_crc)
         if crc_status:
             self.ui.voltageStatusLabel.setPixmap(QtGui.QPixmap('GUI/Icons/voltageStatusOK.png'))

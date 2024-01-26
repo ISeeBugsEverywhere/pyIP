@@ -76,6 +76,7 @@ class uC():
         add = 0x70
         kiek = kiekData+1 #?? kodėl +1?
         f42kV = None
+        print(self.model)
         if self.model == 'A':
             volts2 = (kV * 1000.0 + 143.66) / 1.0158
             volts = int(4095 * (4200.0 - volts2) / 2200.0)
