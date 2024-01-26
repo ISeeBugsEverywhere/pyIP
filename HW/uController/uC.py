@@ -76,7 +76,7 @@ class uC():
         add = 0x70
         kiek = kiekData+1 #?? kodėl +1?
         f42kV = None
-        print(self.model)
+        # print(self.model)
         if self.model == 'A':
             volts2 = (kV * 1000.0 + 143.66) / 1.0158
             volts = int(4095 * (4200.0 - volts2) / 2200.0)
@@ -150,6 +150,9 @@ class uC():
         statusas, ErrCode, code, crc_gautas, crc_apsk = self.lastBytes(data)
         Nib = data[4:8]
         Ni = int.from_bytes(Nib, 'little')
+        # for debug purposes:
+        NiBig = int.from_bytes(Nib, 'big')
+        print("::Ni, NiBig::", Ni, NiBig)
         return Ni, statusas, ErrCode, code, crc_gautas, crc_apsk, data
         pass
     
