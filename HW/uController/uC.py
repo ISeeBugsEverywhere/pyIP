@@ -87,7 +87,7 @@ class uC():
             f42kV = volts.to_bytes(2, 'little')
         cmd = [esc.to_bytes(1,'little'), w.to_bytes(1, 'little'),
                nr.to_bytes(1, 'little'), kiek.to_bytes(1,'little'),
-               add.to_bytes(1,'little'), f42kV[1].to_bytes(1, 'little'), f42kV[0].to_bytes(1,'little')]
+               add.to_bytes(1,'little'), f42kV[0].to_bytes(1, 'little'), f42kV[1].to_bytes(1,'little')]
         cmd_ = b''.join(cmd)#+f42kV
         cmd_crc = ComputeHash(cmd_)
         cmd_b = b''.join(cmd)+cmd_crc
