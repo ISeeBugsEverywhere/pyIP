@@ -14,7 +14,7 @@ class IzoEQ():
         t = -1
         r = -1
         if eV > 0:
-            r = self.Edf[self.Edf['EV'] == eV]['C']
+            r = self.Edf[self.Edf['EV'] == eV]['C'].values[0]
         else:
             r = -1
         try:
@@ -31,7 +31,7 @@ class IzoEQ():
         t = -1
         r = -1
         if eV > 0:
-            r = self.Qdf[self.Qdf['EV'] == eV]['C']
+            r = self.Qdf[self.Qdf['EV'] == eV]['C'].values[0]
         else:
             r = -1
         try:
