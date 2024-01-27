@@ -80,13 +80,13 @@ class CycleB(QObject):
             self.progress.emit(Ni, pct, 'Tamsa') #Ni, %, eV
             pass
         # end of first dark part
-        ce = self.minE # einama energijų didėjimo kryptimi
         # shutter is opened:
         b = self.ORIEL.openShutter()
         time.sleep(1)
         for i in range(0,self.r):
             if self.end:
                     break
+            ce = self.minE # einama energijų didėjimo kryptimi
             while ce <= self.maxE and not self.end:                            
                 # oriel eina į λ:
                 λ = round(1239.75/ce, 3)

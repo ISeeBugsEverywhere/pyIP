@@ -173,6 +173,8 @@ class mainAppW(QtWidgets.QMainWindow):
             step = self.ui.stepEVBox.value()
             repeats = self.ui.repeatBox.value()
             backgroundTimes = self.ui.darkCounterBox.value()
+            points = ((maxE-minE)/step*repeats+backgroundTimes)*Ts/60
+            self.check("Apytikslys veikimo laikas:", int(points), "minučių", ignore=True)
             self.ExpThread = QThread(parent=self)
             self.ExpObject = CycleA(self.uC, self.oriel)
             self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1, minE, maxE, step, repeats, backgroundTimes)
@@ -193,6 +195,8 @@ class mainAppW(QtWidgets.QMainWindow):
             step = self.ui.stepEVBox.value()
             repeats = self.ui.repeatBox.value()
             backgroundTimes = self.ui.darkCounterBox.value()
+            points = ((maxE-minE)/step*repeats+backgroundTimes)*Ts/60
+            self.check("Apytikslys veikimo laikas:", int(points), "minučių", ignore=True)
             self.ExpThread = QThread(parent=self)
             self.ExpObject = CycleB(self.uC, self.oriel)
             self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1, minE, maxE, step, repeats, backgroundTimes)
@@ -395,13 +399,7 @@ class mainAppW(QtWidgets.QMainWindow):
         Ts = self.ui.TsBox.value()
         Cth = self.ui.cthBox.value()
         U = self.ui.uBox.value()
-        exp_params=f'''
-        
-        ===Matavimų parametrai===
-        ===Ts[s]: {Ts:.2f}; Cth[V]: {Cth:.2f};
-        ===Įtampa U[V]: {U};
-        =========================
-        '''
+        exp_params=f'''\n===Matavimų parametrai===\n===Ts[s]: {Ts:.2f}; Cth[V]: {Cth:.2f};\n===Įtampa U[V]: {U};\n=========================\n'''
         f_.write(data+exp_params)
         f_.close()
         # išvalymas senų duomenų:
