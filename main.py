@@ -127,6 +127,7 @@ class mainAppW(QtWidgets.QMainWindow):
         mpen.setWidth(2)
         self.ui.plotWidget.getPlotItem().getAxis('left').setTextPen(mpen)
         self.ui.plotWidget.getPlotItem().getAxis('bottom').setTextPen(mpen)
+        self.setWindowIcon(QtGui.QIcon('GUI/Icons/spectrum.png'))
         pass
 
 
