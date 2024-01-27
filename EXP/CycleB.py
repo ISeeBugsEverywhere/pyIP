@@ -80,7 +80,10 @@ class CycleB(QObject):
             self.progress.emit(Ni, pct, 'Tamsa') #Ni, %, eV
             pass
         # end of first dark part
-        # shutter is opened:
+        # Oriel siunčiam į minE:
+        λ = round(1239.75/self.minE, 3)
+        n = self.ORIEL.gowave(λ)
+        # shutter is opened:        
         b = self.ORIEL.openShutter()
         time.sleep(1)
         for i in range(0,self.r):
