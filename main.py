@@ -18,13 +18,15 @@ import subprocess
 import glob
 
 import pyqtgraph as pq
+import time
+import datetime as DT
 
 from EXP.Single import SingleShot #1nam matavimui
 from EXP.CycleA import CycleA #cycleA
 from EXP.CycleB import CycleB #cycleB
 from CALIBR.IzoQE import IzoEQ
 
-MSG = f"{'E[eV]': ^10}{'Ni[c]': ^10}{'EQQ/s': ^10}{'EEQ/s': ^10}{'O2[%]': ^10}{'U[V]': ^10}\n"+'='*60
+MSG = f"{'E[eV]': ^10}{'Ni[c]': ^10}{'EQQ/s': ^10}{'EEQ/s': ^10}{'O2[%]': ^10}{'t[now]': ^10}\n"+'='*60
 
 
 class mainAppW(QtWidgets.QMainWindow):
@@ -222,7 +224,8 @@ class mainAppW(QtWidgets.QMainWindow):
             eV = 'Tamsa'
         o2 = self.ui.lcdO2.value()
         Uvaldiklio = self.ui.uBox.value()
-        msg = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{Uvaldiklio: ^10}'
+        n = DT.datetime.now().time()
+        msg = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{n: ^10}'
         self.ui.experimentOutputEdit.appendPlainText(msg)
         self.plotPoints(eV, Ni)
         self.ui.expProgressBar.setValue(p)
@@ -277,7 +280,8 @@ class mainAppW(QtWidgets.QMainWindow):
         Ts = self.ui.TsBox.value()
         EQQ, EEQ = self.QQ.GetCorr(eV, Ni, Ts)
         o2 = self.ui.lcdO2.value()
-        data_str = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{Uvaldiklio: ^10}'
+        n = DT.datetime.now().time()
+        data_str = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{n: ^10}'
         self.ui.experimentOutputEdit.appendPlainText(data_str)
         self.check(f'{λ:.2f} | {Ni} | {ErrCode}')
         # QThread must be destroyied:
@@ -388,8 +392,19 @@ class mainAppW(QtWidgets.QMainWindow):
         p = self.cfg.parser['path']['path']
         fp = os.path.join(p, fname)
         f_ = open(fp, mode='w')
-        f_.write(data)
+        Ts = self.ui.TsBox.value()
+        Cth = self.ui.cthBox.value()
+        U = self.ui.uBox.value()
+        exp_params=f'''
+        
+        ===Matavimų parametrai===
+        ===Ts[s]: {Ts:.2f}; Cth[V]: {Cth:.2f};
+        ===Įtampa U[V]: {U};
+        =========================
+        '''
+        f_.write(data+exp_params)
         f_.close()
+        # išvalymas senų duomenų:
         self.ui.experimentOutputEdit.setPlainText(MSG)
         self.plotData = {}
         self.eVs = []
