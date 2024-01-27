@@ -19,6 +19,8 @@ class OrielControlWidget(QtWidgets.QWidget):
 
     def setOriel(self, oriel):
         self.oriel = oriel
+        # get current position:
+        self.wave_fn()
 
     def signals(self):
         self.ui.goBtn.clicked.connect(self.go_fn)
@@ -62,7 +64,7 @@ class OrielControlWidget(QtWidgets.QWidget):
             self.ui.nmRadioBtn.setChecked(True)
             n_wave = val
         bts = self.oriel.gowave(val, unit)
-        self.qtSignal.emit("Bytes written {}".format(bts))
+        # self.qtSignal.emit("Bytes written {}".format(bts))
         #     delay?
         time.sleep(math.floor(abs(c_wave-n_wave))/10.0*0.125)
         cw = self.oriel.wave()
@@ -76,6 +78,8 @@ class OrielControlWidget(QtWidgets.QWidget):
         elif s.lower() == 'o':
             self.oriel.closeShutter()
             self.ui.shutterStatusLabel.setText("CLOSED")
+    
+    
     def check_fn(self):
         s = self.oriel.shutter()
         if s.lower() == 'c':
@@ -88,6 +92,10 @@ class OrielControlWidget(QtWidgets.QWidget):
 
     def wave_fn(self):
         w = self.oriel.wave()
+        if self.ui.nmRadioBtn.isChecked():
+            self.ui.entryBox.setValue(float(w))
+        elif self.ui.evRadioBtn.isChecked():
+            self.ui.entryBox.setValue(round(1239.75/float(w), 3))
         self.ui.waveLabel.setText(WAVE_LABEL_TEXT.format(w))
 
     pass
