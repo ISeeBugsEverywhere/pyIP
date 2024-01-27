@@ -224,8 +224,8 @@ class mainAppW(QtWidgets.QMainWindow):
             eV = 'Tamsa'
         o2 = self.ui.lcdO2.value()
         Uvaldiklio = self.ui.uBox.value()
-        n = DT.datetime.now().time()
-        msg = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{n: ^10}'
+        laikas = str(DT.datetime.now().time())[:8]
+        msg = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{laikas: ^10}'
         self.ui.experimentOutputEdit.appendPlainText(msg)
         self.plotPoints(eV, Ni)
         self.ui.expProgressBar.setValue(p)
@@ -280,8 +280,8 @@ class mainAppW(QtWidgets.QMainWindow):
         Ts = self.ui.TsBox.value()
         EQQ, EEQ = self.QQ.GetCorr(eV, Ni, Ts)
         o2 = self.ui.lcdO2.value()
-        n = DT.datetime.now().time()
-        data_str = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{n: ^10}'
+        laikas = str(DT.datetime.now().time())[:8]
+        data_str = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{laikas: ^10}'
         self.ui.experimentOutputEdit.appendPlainText(data_str)
         self.check(f'{λ:.2f} | {Ni} | {ErrCode}')
         # QThread must be destroyied:
