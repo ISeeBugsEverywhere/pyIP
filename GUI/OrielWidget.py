@@ -26,26 +26,37 @@ class OrielControlWidget(QtWidgets.QWidget):
         self.ui.shutterCheckBtn.clicked.connect(self.check_fn)
         self.ui.waveBtn.clicked.connect(self.wave_fn)
         self.ui.sendCmdBtn.clicked.connect(self.sendCmd)
+        self.ui.entryBox.editingFinished.connect(self.checkFn)
 
     def _gui_(self):
         pass
+    
+    def checkFn(self):
+        val = self.ui.entryBox.value()
+        if val > 6.5 and val < 198:
+            self.ui.entryBox.setValue(6.25)
+            self.ui.evRadioBtn.setChecked(True)
+        elif val > 1000:
+            self.ui.entryBox.setValue(1000)
+            self.ui.nmRadioBtn.setChecked(True)
 
     def sendCmd(self):
         cmd = self.ui.plainCmdBox.text()
         r = self.oriel.cmd(cmd)
         self.qtSignal.emit("CMD:{}, RES: {}".format(cmd, r))
         pass
+    
     def go_fn(self):
         c_wave = float(self.oriel.wave())
         val =  self.ui.entryBox.value()
         unit = 'nm' # default
         n_wave = 0
-        if val < 179:
+        if val < 7:
             unit = 'ev'
             self.ui.evRadioBtn.setChecked(True)
             self.ui.nmRadioBtn.setChecked(False)
             n_wave = 1239.75/float(val)
-        elif val > 180:
+        elif val >= 198:
             unit = 'nm'
             self.ui.evRadioBtn.setChecked(False)
             self.ui.nmRadioBtn.setChecked(True)
