@@ -128,6 +128,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.plotWidget.getPlotItem().getAxis('left').setTextPen(mpen)
         self.ui.plotWidget.getPlotItem().getAxis('bottom').setTextPen(mpen)
         self.setWindowIcon(QtGui.QIcon('GUI/Icons/spectrum.png'))
+        
         pass
 
 
@@ -175,7 +176,7 @@ class mainAppW(QtWidgets.QMainWindow):
             repeats = self.ui.repeatBox.value()
             backgroundTimes = self.ui.darkCounterBox.value()
             points = ((maxE-minE)/step*repeats+backgroundTimes)*Ts/60
-            self.check("Apytikslys veikimo laikas:", int(points), "minučių", ignore=True)
+            self.check("Apytikslis matavimo laikas:", int(points), "minučių", ignore=True)
             self.ExpThread = QThread(parent=self)
             self.ExpObject = CycleA(self.uC, self.oriel)
             self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1, minE, maxE, step, repeats, backgroundTimes)
@@ -197,7 +198,7 @@ class mainAppW(QtWidgets.QMainWindow):
             repeats = self.ui.repeatBox.value()
             backgroundTimes = self.ui.darkCounterBox.value()
             points = ((maxE-minE)/step*repeats+backgroundTimes)*Ts/60
-            self.check("Apytikslys veikimo laikas:", int(points), "minučių", ignore=True)
+            self.check("Apytikslis matavimo laikas:", int(points), "minučių", ignore=True)
             self.ExpThread = QThread(parent=self)
             self.ExpObject = CycleB(self.uC, self.oriel)
             self.ExpObject.set_args(Ts, Cth, self.Tz, self.Tq, self.Vq, 1, minE, maxE, step, repeats, backgroundTimes)
@@ -420,6 +421,7 @@ class mainAppW(QtWidgets.QMainWindow):
         pass
 
     def dis_fn(self):
+        self.ArduinoWatch.stoped()
         self.ArduinoWatch.end(True)
         self.ArdQThread.quit()
         self.ArdQThread.wait()
