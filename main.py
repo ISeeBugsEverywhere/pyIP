@@ -429,6 +429,7 @@ class mainAppW(QtWidgets.QMainWindow):
         V = self.cfg.parser['oriel']['VENDOR_ID']
         P = self.cfg.parser['oriel']['PRODUCT_ID']
         self.oriel = Oriel(int(V, 16), int(P, 16))
+        self.set2kVfn()
         var = self.cfg.parser['uc']['model']
         self.uC = uC(var)
         self.ui.connectBtn.setText('Prisijungti')
