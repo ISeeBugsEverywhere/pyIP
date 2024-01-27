@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/egis/PycharmProjects/PyIP/GUI/UI/mainIPWindowUI.ui'
+# Form implementation generated from reading ui file '/home/egis/PycharmProjects/pyIP/GUI/UI/mainIPWindowUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -138,6 +138,9 @@ class Ui_IpMain(object):
         font.setBold(True)
         font.setWeight(75)
         self.TsBox.setFont(font)
+        self.TsBox.setMinimum(1)
+        self.TsBox.setMaximum(20)
+        self.TsBox.setProperty("value", 2)
         self.TsBox.setObjectName("TsBox")
         self.gridLayout_3.addWidget(self.TsBox, 0, 1, 1, 1)
         self.uBox = QtWidgets.QSpinBox(self.groupBox_2)
@@ -163,6 +166,9 @@ class Ui_IpMain(object):
         font.setBold(True)
         font.setWeight(75)
         self.cthBox.setFont(font)
+        self.cthBox.setMinimum(1.0)
+        self.cthBox.setMaximum(3.3)
+        self.cthBox.setProperty("value", 2.0)
         self.cthBox.setObjectName("cthBox")
         self.gridLayout_3.addWidget(self.cthBox, 0, 3, 1, 1)
         self.label_8 = QtWidgets.QLabel(self.groupBox_2)
@@ -303,6 +309,8 @@ class Ui_IpMain(object):
         font.setBold(True)
         font.setWeight(75)
         self.startEVBox.setFont(font)
+        self.startEVBox.setMinimum(3.9)
+        self.startEVBox.setMaximum(6.4)
         self.startEVBox.setSingleStep(0.05)
         self.startEVBox.setProperty("value", 4.5)
         self.startEVBox.setObjectName("startEVBox")
@@ -334,6 +342,8 @@ class Ui_IpMain(object):
         font.setBold(True)
         font.setWeight(75)
         self.stopEVBox.setFont(font)
+        self.stopEVBox.setMinimum(3.9)
+        self.stopEVBox.setMaximum(6.4)
         self.stopEVBox.setSingleStep(0.05)
         self.stopEVBox.setProperty("value", 6.25)
         self.stopEVBox.setObjectName("stopEVBox")
@@ -522,7 +532,7 @@ class Ui_IpMain(object):
         self.gridLayout_11.addWidget(self.tabWidget, 0, 1, 1, 1)
         IpMain.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(IpMain)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1390, 27))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1390, 28))
         self.menubar.setObjectName("menubar")
         self.menuFailas = QtWidgets.QMenu(self.menubar)
         self.menuFailas.setObjectName("menuFailas")

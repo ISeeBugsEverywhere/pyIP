@@ -293,6 +293,15 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>20</number>
+               </property>
+               <property name="value">
+                <number>2</number>
+               </property>
               </widget>
              </item>
              <item row="1" column="1">
@@ -337,6 +346,15 @@
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="minimum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>3.300000000000000</double>
+               </property>
+               <property name="value">
+                <double>2.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -594,6 +612,12 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="minimum">
+                <double>3.900000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>6.400000000000000</double>
+               </property>
                <property name="singleStep">
                 <double>0.050000000000000</double>
                </property>
@@ -676,6 +700,12 @@
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="minimum">
+                <double>3.900000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>6.400000000000000</double>
                </property>
                <property name="singleStep">
                 <double>0.050000000000000</double>
@@ -1077,7 +1107,7 @@
      <x>0</x>
      <y>0</y>
      <width>1390</width>
-     <height>27</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFailas">
