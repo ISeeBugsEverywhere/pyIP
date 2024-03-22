@@ -26,7 +26,7 @@ from EXP.CycleA import CycleA #cycleA
 from EXP.CycleB import CycleB #cycleB
 from CALIBR.IzoQE import IzoEQ
 
-MSG = f"{'E[eV]': ^10}{'Ni[c]': ^10}{'EQQ/s': ^10}{'EEQ/s': ^10}{'O2[%]': ^10}{'t[now]': ^10}\n"+'='*60
+MSG = f"{'E[eV]': ^10}{'Ni[c/min]': ^10}{'EQQ/s': ^10}{'EEQ/s': ^10}{'O2[%]': ^10}{'t[now]': ^10}\n"+'='*60
 
 
 class mainAppW(QtWidgets.QMainWindow):
@@ -231,7 +231,7 @@ class mainAppW(QtWidgets.QMainWindow):
         o2 = self.ui.lcdO2.value()
         Uvaldiklio = self.ui.uBox.value()
         laikas = str(DT.datetime.now().time())[:8]
-        msg = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{laikas: ^10}'
+        msg = f'{eV: ^10}{Ni/Ts*60.0: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{laikas: ^10}'
         self.ui.experimentOutputEdit.appendPlainText(msg)
         self.plotPoints(eV, Ni)
         self.ui.expProgressBar.setValue(p)
@@ -287,7 +287,7 @@ class mainAppW(QtWidgets.QMainWindow):
         EQQ, EEQ = self.QQ.GetCorr(eV, Ni, Ts)
         o2 = self.ui.lcdO2.value()
         laikas = str(DT.datetime.now().time())[:8]
-        data_str = f'{eV: ^10}{Ni: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{laikas: ^10}'
+        data_str = f'{eV: ^10}{Ni/Ts*60.0: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{laikas: ^10}'
         self.ui.experimentOutputEdit.appendPlainText(data_str)
         self.check(f'{λ:.2f} | {Ni} | {ErrCode}')
         # QThread must be destroyied:
