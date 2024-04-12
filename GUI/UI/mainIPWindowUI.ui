@@ -897,6 +897,13 @@
             </layout>
            </widget>
           </item>
+          <item row="2" column="3">
+           <widget class="QCheckBox" name="msgBox">
+            <property name="text">
+             <string>MSG?</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
@@ -1107,7 +1114,7 @@
      <x>0</x>
      <y>0</y>
      <width>1390</width>
-     <height>28</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFailas">

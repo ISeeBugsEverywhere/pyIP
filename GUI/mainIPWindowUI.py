@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/egis/PycharmProjects/pyIP/GUI/UI/mainIPWindowUI.ui'
+# Form implementation generated from reading ui file '/home/egis/PycharmProjects/PyIP/GUI/UI/mainIPWindowUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -435,6 +435,9 @@ class Ui_IpMain(object):
         self.label_17.setObjectName("label_17")
         self.gridLayout_15.addWidget(self.label_17, 1, 2, 1, 1)
         self.gridLayout_5.addWidget(self.groupBox_10, 1, 1, 3, 1)
+        self.msgBox = QtWidgets.QCheckBox(self.expTab)
+        self.msgBox.setObjectName("msgBox")
+        self.gridLayout_5.addWidget(self.msgBox, 2, 3, 1, 1)
         self.verticalLayout_2.addLayout(self.gridLayout_5)
         self.gridLayout_9 = QtWidgets.QGridLayout()
         self.gridLayout_9.setObjectName("gridLayout_9")
@@ -532,7 +535,7 @@ class Ui_IpMain(object):
         self.gridLayout_11.addWidget(self.tabWidget, 0, 1, 1, 1)
         IpMain.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(IpMain)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1390, 28))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1390, 27))
         self.menubar.setObjectName("menubar")
         self.menuFailas = QtWidgets.QMenu(self.menubar)
         self.menuFailas.setObjectName("menuFailas")
@@ -595,6 +598,7 @@ class Ui_IpMain(object):
         self.label_15.setText(_translate("IpMain", "O2 [%]"))
         self.label_16.setText(_translate("IpMain", "T [°C]"))
         self.label_17.setText(_translate("IpMain", "H [%]"))
+        self.msgBox.setText(_translate("IpMain", "MSG?"))
         self.groupBox_6.setTitle(_translate("IpMain", "Oriel:"))
         self.groupBox_7.setTitle(_translate("IpMain", "Rezultatai:"))
         self.groupBox_4.setTitle(_translate("IpMain", "Viz.:"))

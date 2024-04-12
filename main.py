@@ -26,6 +26,8 @@ from EXP.CycleA import CycleA #cycleA
 from EXP.CycleB import CycleB #cycleB
 from CALIBR.IzoQE import IzoEQ
 
+from client import send_msg
+
 MSG = f"{'E[eV]': ^10}{'Ni[c/min]': ^10}{'EQQ/s': ^10}{'EEQ/s': ^10}{'O2[%]': ^10}{'t[now]': ^10}\n"+'='*60
 
 
@@ -245,6 +247,11 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.doBtn.setText('Matuoti')
         self.ExpThread.quit()
         self.ui.expProgressBar.setValue(0)
+        tcp = self.cfg.parser['msg']['tcp']
+        port = self.cfg.parser['msg']['port']
+        msg = "Matavimas baigėsi."
+        if self.ui.msgBox.isChecked():
+            send_msg(tcp, port, msg)
         pass
     
     def cycleError(self, ex, ErrMsg, errCode):
@@ -410,6 +417,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.eVs = []
         self.Nis = []
         self.ui.plotWidget.clear()
+        self.saveW.ui.fName.setText('???')
 
 
     def cnt_fn(self):
