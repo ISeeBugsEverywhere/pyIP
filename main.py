@@ -251,7 +251,8 @@ class mainAppW(QtWidgets.QMainWindow):
         port = self.cfg.parser['msg']['port']
         msg = "Matavimas baigėsi."
         if self.ui.msgBox.isChecked():
-            send_msg(tcp, port, msg)
+            ret = send_msg(tcp, port, msg)
+            self.ui.responsesField.append(ret)
         pass
     
     def cycleError(self, ex, ErrMsg, errCode):
