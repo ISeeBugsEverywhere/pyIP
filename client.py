@@ -2,7 +2,7 @@ import socket
 
 def send_msg(ip, port, msg):
     HOST = ip
-    PORT = port
+    PORT = int(port)
     data = msg
     
     try:
