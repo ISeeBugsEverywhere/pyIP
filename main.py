@@ -60,6 +60,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.plotData = {}
         self.eVs = []
         self.Nis = []
+        self.now = DT.datetime.now()
 
 
     def __gui__(self):
@@ -162,6 +163,7 @@ class mainAppW(QtWidgets.QMainWindow):
         if 'matuot' in self.ui.doBtn.text().lower():
             r = True
             self.ui.doBtn.setText('STOP')
+            self.now = DT.datetime.now()
         elif 'sto' in self.ui.doBtn.text().lower():
             r = False
             self.ExpObject.setEnd()
@@ -249,7 +251,10 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.expProgressBar.setValue(0)
         tcp = self.cfg.parser['msg']['tcp']
         port = self.cfg.parser['msg']['port']
-        msg = "Matavimas baigėsi."
+        
+        utc= DT.datetime.now()
+        delta = (utc - self.now).total_seconds()
+        msg = f"BAIGTA.\nMatavimo pradžia: {self.now}\nMatavimo pabaiga: {utc}\nTrukmė: {delta} s\n{delta/60:.2f}"
         if self.ui.msgBox.isChecked():
             ret = send_msg(tcp, port, msg)
             self.ui.responsesField.append(ret)
