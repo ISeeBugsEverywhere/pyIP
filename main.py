@@ -254,7 +254,7 @@ class mainAppW(QtWidgets.QMainWindow):
         
         utc= DT.datetime.now()
         delta = (utc - self.now).total_seconds()
-        msg = f"BAIGTA.\nMatavimo pradžia: {self.now}\nMatavimo pabaiga: {utc}\nTrukmė: {delta} s\n{delta/60:.2f}"
+        msg = f"BAIGTA.</br>Matavimo pradžia: {self.now.time()[:8]}</br>Matavimo pabaiga: {utc.time()[:8]}</br>Trukmė: {delta} s</br>{delta/60:.2f}\n"
         if self.ui.msgBox.isChecked():
             ret = send_msg(tcp, port, msg)
             self.ui.responsesField.append(ret)
