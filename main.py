@@ -217,6 +217,7 @@ class mainAppW(QtWidgets.QMainWindow):
             # C
             self.check('C dalis nerealizuota', ignore=True)
             pass
+        self.ui.statusLabel.setText('')
         pass
     
     def cycleProgress(self, Ni, p, eV):
@@ -250,14 +251,16 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ExpThread.quit()
         self.ui.expProgressBar.setValue(0)
         tcp = self.cfg.parser['msg']['tcp']
-        port = self.cfg.parser['msg']['port']
-        
+        port = self.cfg.parser['msg']['port']        
         utc= DT.datetime.now()
         delta = (utc - self.now).total_seconds()
-        msg = f"BAIGTA.</br>Matavimo pradžia: {self.now.time()[:8]}</br>Matavimo pabaiga: {utc.time()[:8]}</br>Trukmė: {delta} s</br>{delta/60:.2f}\n"
+        msg = f"BAIGTA.|br|Matavimo pradžia: {str(self.now.time())[:8]}|br|Matavimo pabaiga: {str(utc.time())[:8]}|br|Trukmė: {delta} s|br|{delta/60:.2f}\n"
         if self.ui.msgBox.isChecked():
             ret = send_msg(tcp, port, msg)
             self.ui.responsesField.append(ret)
+        else:
+            self.ui.responsesField.append('MSG not sent.')
+            self.ui.responsesField.append(msg)
         pass
     
     def cycleError(self, ex, ErrMsg, errCode):
@@ -277,6 +280,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ExpObject.progress.connect(self.expProgressBarFn)
         self.ExpObject.finished.connect(self.expSingleFinished)
         self.ExpThread.start()
+        self.ui.statusLabel.setText('')
     
     def expProgressBarFn(self, p:float):
         self.ui.expProgressBar.setValue(int(p*100))
@@ -424,6 +428,7 @@ class mainAppW(QtWidgets.QMainWindow):
         self.Nis = []
         self.ui.plotWidget.clear()
         self.saveW.ui.fName.setText('???')
+        self.ui.statusLabel.setText('File was saved to '+fname)
 
 
     def cnt_fn(self):
