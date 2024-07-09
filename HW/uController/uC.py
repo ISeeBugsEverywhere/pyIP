@@ -68,8 +68,8 @@ class uC():
         scaleStatusd = {0:'50 nA', 1:'500 nA'}
         try:
             self.port.write(cmd)
-            time.sleep(1)
-            r_ = self.port.read(24)
+            time.sleep(2)
+            r_ = self.port.read(18)
             cr, crcr, crc_r = CompareHash(r_)
             ErrCode = self.crcErr[r_[-5]]
             cmdNr = r_[-6]
