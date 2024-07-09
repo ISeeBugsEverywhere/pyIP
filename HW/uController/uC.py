@@ -52,6 +52,33 @@ class uC():
             return cr, crcr, crc_r, ErrCode, cmdNr, cmdRep, scaleStatus, scaleStatusd[scaleStatus]
         except Exception as ex:
             print('::EX:{}::'.format(str(ex)))
+    
+    def setInValue(self, In, cmd_nr = 1):
+        '''Rašyti atmintį.
+        Esc  w nr Add  Kiek  Duomenys CRC32'''
+        esc = 0x1b
+        w = 0x77
+        nr = cmd_nr
+        add = 0x82
+        kiek = 2 # vienas baitas? 0/1
+        cmd_ = listIntegersToByteArray([esc, w, nr, kiek, add])
+        crc = ComputeHash(cmd_)
+        cmd = cmd_+crc
+        cr, crcr, crc_r = None, None, None
+        scaleStatusd = {0:'50 nA', 1:'500 nA'}
+        try:
+            self.port.write(cmd)
+            time.sleep(1)
+            r_ = self.port.read(24)
+            cr, crcr, crc_r = CompareHash(r_)
+            ErrCode = self.crcErr[r_[-5]]
+            cmdNr = r_[-6]
+            cmdRep = r_[-7]
+            scaleStatus = int(r_[-8])
+            return cr, crcr, crc_r, ErrCode, cmdNr, cmdRep, scaleStatus, scaleStatusd[scaleStatus]
+        except Exception as ex:
+            return -1, -1, -1, '::EX:{}::'.format(str(ex)), -1, -1, -1, -1
+            # print('::EX:{}::'.format(str(ex)))
 
 
     def setVoltage(self, kV, cmd_nr:int, kiekData):

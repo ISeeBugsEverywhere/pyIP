@@ -155,8 +155,19 @@ class mainAppW(QtWidgets.QMainWindow):
         self.ui.oneBtn.clicked.connect(self.oneMeasurement) #singleshot'as
         # Cycles (A/B/C)
         self.ui.doBtn.clicked.connect(self.mCycleStart)
+        # in fn:
+        self.ui.setInButton.clicked.connect(self.setInFn)
         
         pass
+    
+    def setInFn(self):
+        scaleStatusd = {0:'50 nA', 1:'500 nA'}
+        scStat = {'50nA':0, '500nA':1}
+        idx = self.ui.inComboBox.currentText()        
+        cr, crcr, crc_r, ErrCode, cmdNr, cmdRep, scaleStatus, scaleStatus_d = self.uC.setInValue(scStat[idx])
+        self.check(cr, crcr, crc_r, ErrCode, cmdNr, cmdRep, scaleStatus, scaleStatus)
+        self.ui.inComboBox.setCurrentIndex(scaleStatus)
+        
     
     def mCycleStart(self):
         r = False
