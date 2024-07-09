@@ -501,6 +501,8 @@ class mainAppW(QtWidgets.QMainWindow):
             if cr:
                 self.ui.ucStatus.setPixmap(QtGui.QPixmap('GUI/Icons/micro.png'))
                 self.ui.ucStatus.setScaledContents(True)
+                scaleStatusd = {0:'50 nA', 1:'500 nA'}
+                self.ui.inComboBox.setCurrentIndex(scaleStatus)
             else:
                 self.ui.ucStatus.setPixmap(QtGui.QPixmap('GUI/Icons/NOMICRO.png'))
                 self.ui.ucStatus.setScaledContents(True)
