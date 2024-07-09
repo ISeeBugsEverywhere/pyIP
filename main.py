@@ -230,8 +230,8 @@ class mainAppW(QtWidgets.QMainWindow):
             cpl = round(1239.75/float(eV), 3)
             self.ow.ui.waveLabel.setText(WAVE_LABEL_TEXT.format(cpl))
         Ts = self.ui.TsBox.value()
-        # EQQ, EEQ = self.QQ.GetCorr(round(float(eV), 3), Ni, Ts)
-        EEQ, EQQ = -1,-1
+        EQQ, EEQ = self.QQ.GetCorr(round(float(eV), 3), Ni, Ts)
+        # EEQ, EQQ = -1,-1
         if eV == -1:
             eV = 'Tamsa'
         o2 = self.ui.lcdO2.value()
@@ -302,8 +302,8 @@ class mainAppW(QtWidgets.QMainWindow):
         if λ > 0:
             eV = round(1239.75/λ, 3)
         Ts = self.ui.TsBox.value()
-        # EQQ, EEQ = self.QQ.GetCorr(eV, Ni, Ts)
-        EEQ, EQQ = -1,-1
+        EQQ, EEQ = self.QQ.GetCorr(eV, Ni, Ts)
+        # EEQ, EQQ = -1,-1
         o2 = self.ui.lcdO2.value()
         laikas = str(DT.datetime.now().time())[:8]
         data_str = f'{eV: ^10}{Ni/Ts*60.0: ^10.0f}{EQQ: ^10.2f}{EEQ: ^10.2f}{o2: ^10.2f}{laikas: ^10}'
